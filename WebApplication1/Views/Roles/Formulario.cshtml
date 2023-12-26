@@ -1,0 +1,153 @@
+﻿@model DataSet
+@using System.Data;
+
+
+@{
+    Layout = null;
+    string accionsql = Request.QueryString["accionsql"];
+    string id = Request.QueryString["id"];
+    string contenedor = Request.QueryString["contenedor"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Formulario</title>
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="Formulario" style="width:700px;padding:0px;" fit="true">
+        <!--Marco con titulo-->
+        <div class="easyui-layout" fit="true">
+            <!--Toolbar Menu-->
+            <div region="north" border="true" style="padding:3px 5px;background:#efefef;height:35px;">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save" onClick="roles_grabar('@contenedor', '@accionsql', '@id')">Grabar y Cerrar</a>
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-cancelar" onClick="javascript:refreshPanel('@Url.Content("~/roles/lista")?contenedor=@(contenedor)')">Cancelar</a>
+                <!--<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save">Grabar y Nuevo</a>-->
+            </div>
+            <!--Toolbar Menu-->
+            <!--Contenedor de contenido-->
+            <div id="@(contenedor)formulario" region="center" border="false" style="padding:20px;background-color:#E9EAE5">
+                <span style='color:red'>Campos con (*) son requeridos</span>
+                <br>
+                <table cellspacing="0" cellpadding="0">
+                    <colgroup>
+                        <col width="100">
+                        <col width="300">
+                    </colgroup>
+                    <tr height="40px">
+                        <td>
+                            Codigo <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@(contenedor)txtccod_grupo" readonly class="easyui-textbox @(contenedor)formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["ccod_grupo"]); }" style="width:120px;height:23px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Descripcion <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@(contenedor)txtcdsc_grupo" required=true data-options="validateOnCreate:false,validateOnBlur:true" class="easyui-textbox @(contenedor)formulario" style="width:300px;height:23px" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cdsc_grupo"]); }">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Estado <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <select id="@(contenedor)cmbcstatus" required=true data-options="validateOnCreate:false,validateOnBlur:true,prompt:'-seleccionar-',editable:false,panelHeight:'auto',value:'@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cstatus"]); }'" class="easyui-combobox @(contenedor)formulario" style="width:105px;height:23px">
+                                <option value="A">A</option>
+                                <option value="I">I</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td valign=top>
+                            <br>
+                            Formularios
+                        </td>
+                        <td>
+                            <br>
+                            <ul id="@(contenedor)treformularios" class="easyui-tree" data-options="animate:true,checkbox:true">
+                                @{
+                                    string basura = "00";
+                                    string basura2 = "";
+                                    string siguiente = "";
+                                    string actual = "";
+                                    string nomactual = "";
+                                    string ctipo = "";
+                                    string actualmodulo = "";
+                                    string siguientemodulo = "";
+                                    string palabra = "";
+                                    //foreach (DataRow row in Model.Tables[0].Rows)
+                                    for (int i = 0; i < Model.Tables[0].Rows.Count; i++)
+                                    {
+                                        if (basura2 != Model.Tables[0].Rows[i]["ccod_modulo"].ToString())
+                                        {
+                                            @Html.Raw("<li id='P"+Model.Tables[0].Rows[i]["ccod_modulo"].ToString()+"'>");
+                                            @Html.Raw("<span>" + Model.Tables[0].Rows[i]["cdsc_modulo"].ToString() + "</span>");
+                                            @Html.Raw("<ul>");
+                                            basura = "00";
+                                            siguiente = "";
+                                            basura2 = Model.Tables[0].Rows[i]["ccod_modulo"].ToString();
+                                        }
+
+                                        if (accionsql == "E")
+                                        {
+                                            if (Model.Tables[0].Rows[i]["id"].ToString() == "")
+                                            {
+                                                palabra = "";
+                                            } else
+                                            {
+                                                palabra = " checked ";
+                                            }
+                                        }
+
+
+
+                                        actual = Model.Tables[0].Rows[i]["ccod_menu"].ToString();
+                                        nomactual = Model.Tables[0].Rows[i]["cdsc_menu"].ToString();
+                                        ctipo = Model.Tables[0].Rows[i]["ctipo"].ToString();
+                                        actualmodulo = Model.Tables[0].Rows[i]["ccod_modulo"].ToString();
+
+                                        siguiente = i + 1 < Model.Tables[0].Rows.Count ? Model.Tables[0].Rows[i + 1]["ccod_menu"].ToString() : "00";
+                                        siguientemodulo = i + 1 < Model.Tables[0].Rows.Count ? Model.Tables[0].Rows[i + 1]["ccod_modulo"].ToString() : "00";
+
+                                        if (actual.Length == siguiente.Length)
+                                        {
+                                            @Html.Raw("<li id='" + ctipo + actualmodulo + actual + "' " + palabra + ">" + nomactual + "</li>");
+                                        }
+                                        else if (siguiente.Length > actual.Length)
+                                        {
+                                            @Html.Raw("<li id='" + ctipo + actualmodulo + actual + "' " + palabra + ">");
+                                            @Html.Raw("<span>" + nomactual + "</span>");
+                                            @Html.Raw("<ul>");
+                                        }
+                                        else if (siguiente.Length < actual.Length)
+                                        {
+                                            @Html.Raw("<li id='" + ctipo + actualmodulo + actual + "' " + palabra + ">" + nomactual + "</li>");
+                                            for (int z = 0; z < (actual.Length / 2) - (siguiente.Length / 2); z++)
+                                            {
+                                                @Html.Raw("</ul>");
+                                                @Html.Raw("</li>");
+                                            }
+                                        }
+
+                                        if (actualmodulo != siguientemodulo)
+                                        {
+                                            @Html.Raw("</ul>");
+                                            @Html.Raw("</li>");
+                                        }
+
+                                    }
+                                }                                
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

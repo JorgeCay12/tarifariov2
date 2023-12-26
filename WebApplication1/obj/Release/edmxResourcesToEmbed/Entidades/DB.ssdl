@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbtarifarioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+  <EntityType Name="vis_data">
+    <Key>
+      <PropertyRef Name="ccod_ficha" />
+      <PropertyRef Name="cnro_doc" />
+      <PropertyRef Name="ccod_art" />
+      <PropertyRef Name="cdoc" />
+    </Key>
+    <Property Name="cdsc_ug" Type="varchar" MaxLength="6" />
+    <Property Name="ctipo_doc" Type="char" MaxLength="1" />
+    <Property Name="cruc" Type="varchar" MaxLength="11" />
+    <Property Name="ccod_ficha" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="dfec_ins_reg" Type="varchar" MaxLength="16" />
+    <Property Name="dfch_crea" Type="varchar" MaxLength="16" />
+    <Property Name="cnro_doc" Type="varchar" MaxLength="11" Nullable="false" />
+    <Property Name="cpaterno" Type="varchar" MaxLength="30" />
+    <Property Name="cmaterno" Type="varchar" MaxLength="30" />
+    <Property Name="cnombres" Type="varchar" MaxLength="50" />
+    <Property Name="cdireccion" Type="varchar" MaxLength="150" />
+    <Property Name="ccelular" Type="varchar" MaxLength="20" />
+    <Property Name="cemail" Type="varchar" MaxLength="50" />
+    <Property Name="ccod_ccosto" Type="varchar" MaxLength="20" />
+    <Property Name="cdsc_ccosto" Type="varchar" MaxLength="70" />
+    <Property Name="ccod_art" Type="int" Nullable="false" />
+    <Property Name="cdsc_art" Type="varchar" MaxLength="150" />
+    <Property Name="cdsc_pago" Type="varchar" MaxLength="9" />
+    <Property Name="cdoc" Type="char" MaxLength="2" Nullable="false" />
+    <Property Name="cdoc_serie" Type="char" MaxLength="3" />
+    <Property Name="cdoc_nro" Type="char" MaxLength="7" />
+    <Property Name="curl" Type="varchar" MaxLength="204" />
+    <Property Name="ntotal" Type="numeric" Precision="18" Scale="2" />
+    <Property Name="nletras" Type="int" />
+    <Property Name="cstatus_ficha" Type="char" MaxLength="1" />
+  </EntityType>
+  <EntityContainer Name="dbtarifarioModelStoreContainer">
+    <EntitySet Name="vis_data" EntityType="Self.vis_data" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [vis_data].[cdsc_ug] AS [cdsc_ug], 
+    [vis_data].[ctipo_doc] AS [ctipo_doc], 
+    [vis_data].[cruc] AS [cruc], 
+    [vis_data].[ccod_ficha] AS [ccod_ficha], 
+    [vis_data].[dfec_ins_reg] AS [dfec_ins_reg], 
+    [vis_data].[dfch_crea] AS [dfch_crea], 
+    [vis_data].[cnro_doc] AS [cnro_doc], 
+    [vis_data].[cpaterno] AS [cpaterno], 
+    [vis_data].[cmaterno] AS [cmaterno], 
+    [vis_data].[cnombres] AS [cnombres], 
+    [vis_data].[cdireccion] AS [cdireccion], 
+    [vis_data].[ccelular] AS [ccelular], 
+    [vis_data].[cemail] AS [cemail], 
+    [vis_data].[ccod_ccosto] AS [ccod_ccosto], 
+    [vis_data].[cdsc_ccosto] AS [cdsc_ccosto], 
+    [vis_data].[ccod_art] AS [ccod_art], 
+    [vis_data].[cdsc_art] AS [cdsc_art], 
+    [vis_data].[cdsc_pago] AS [cdsc_pago], 
+    [vis_data].[cdoc] AS [cdoc], 
+    [vis_data].[cdoc_serie] AS [cdoc_serie], 
+    [vis_data].[cdoc_nro] AS [cdoc_nro], 
+    [vis_data].[curl] AS [curl], 
+    [vis_data].[ntotal] AS [ntotal], 
+    [vis_data].[nletras] AS [nletras], 
+    [vis_data].[cstatus_ficha] AS [cstatus_ficha]
+    FROM [dbo].[vis_data] AS [vis_data]</DefiningQuery>
+    </EntitySet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,1449 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Plataforma de Gestion</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/js/easyui/themes/default/easyui.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/js/easyui/themes/icon.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/demo.css")">
+    
+    <script type="text/javascript" src="@Url.Content("~/js/jquery-1.11.1.min.js")"></script>
+    <script src="@Url.Content("~/js/jquery-ui.min.js")"></script>    
+    <script type="text/javascript" src="@Url.Content("~/js/easyui/jquery.easyui.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/js/datagrid-filter.js")"></script>
+    
+
+    <style>
+        .textbox,.easyui-linkbutton {
+			border-radius: 3px;
+			-moz-border-radius: 3px;
+			-webkit-border-radius: 3px;
+		}
+    </style>
+
+    <script>
+		$.datepicker.regional['es'] = {
+			closeText: 'Cerrar',
+			prevText: '<Ant',
+			nextText: 'Sig>',
+			currentText: 'Hoy',
+			monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+			monthNamesShort: ['Ene','Feb','Mar','Abr', 'May','Jun','Jul','Ago','Sep', 'Oct','Nov','Dic'],
+			dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sabado'],
+			dayNamesShort: ['Dom','Lun','Mar','Mié','Juv','Vie','Sáb'],
+			dayNamesMin: ['Do','Lu','Ma','Mi','Ju','Vi','Sa'],
+			weekHeader: 'Sm',
+			dateFormat: 'dd/mm/yy',
+			firstDay: 1,
+			isRTL: false,
+			showMonthAfterYear: false,
+			yearSuffix: ''
+		};
+		$.datepicker.setDefaults($.datepicker.regional['es']);
+
+		$.fn.datebox.defaults.formatter = function(date) {
+			var y = date.getFullYear();
+			var m = date.getMonth() + 1;
+			var d = date.getDate();
+			return (d < 10 ? '0' + d : d) + '/' + (m < 10 ? '0' + m : m) + '/' + y;
+		};
+
+		$.fn.datebox.defaults.parser = function(s) {
+			if (s) {
+			var a = s.split('/');
+			var d = new Number(a[0]);
+			var m = new Number(a[1]);
+			var y = new Number(a[2]);
+			var dd = new Date(y, m-1, d);
+			return dd;
+			} else {
+			return new Date();
+			}
+		};
+
+
+
+
+
+
+
+    </script>
+
+    <script>
+
+        $.extend($.fn.textbox.methods, {
+            show: function (jq) {
+                return jq.each(function () {
+                    $(this).next().show();
+                })
+            },
+            hide: function (jq) {
+                return jq.each(function () {
+                    $(this).next().hide();
+                })
+            }
+        })
+
+
+		var index = 0
+
+        function ruta(ccod_menu,contenedor){
+            var url = "";
+            var pagina = ""
+            var accion = ""
+
+            switch (ccod_menu) {
+                case "010101":
+                    pagina = "@Url.Content("~/gestion/lista")" + "?contenedor=" + contenedor
+                    break;
+                case "010201":
+                    pagina = "@Url.Content("~/reporte1/index")" + "?contenedor=" + contenedor
+                    break;
+                case "010202":
+                    pagina = "@Url.Content("~/reporte_pantalla/index")" + "?contenedor=" + contenedor
+                    break;
+                case "010203":
+                    pagina = "@Url.Content("~/reporte_derecho_de_admision_pregrado/index")" + "?ctipo=0&contenedor=" + contenedor
+                    break;
+                case "010204":
+                    pagina = "@Url.Content("~/reporte_derecho_de_admision_pregrado/index")" + "?ctipo=2&contenedor=" + contenedor
+                    break;
+                case "010205":
+                    pagina = "@Url.Content("~/ReporteTarifariosDiversos/index")" + "?ctipo=3&contenedor=" + contenedor
+                    break;
+                case "990101":
+                    pagina = "@Url.Content("~/usuarios/lista/")" + "?contenedor=" + contenedor
+                    break;
+                case "990102":
+                    pagina = "@Url.Content("~/roles/lista/")" + "?contenedor=" + contenedor
+                    break;
+            }
+            url = pagina
+            return url
+        }
+
+        function addPanel(titulo,ccod_menu){
+            index++;
+            contenedor = "contenedor" + index + "_"
+            var url = ruta(ccod_menu,contenedor)
+            if (url=="") { alert('Este formulario no existe') ; return }
+
+            $('#tabs_contenedor').tabs('add',{
+                title: titulo.substring(0,10),
+                iconCls: 'icon-form',
+                fit:true,
+                closable: true,
+                href: url,
+                onLoad: function (panel) {
+                    if (ccod_menu == "010202") { //reporte de cursos
+                        //alert("");
+                        var dg = $('#' + contenedor + 'dgvlistado').datagrid({
+                        url: '@Url.Content("~/reporte_pantalla/json")'
+                        ,method: 'get'
+			            ,filterBtnIconCls: 'icon-filter'
+			            ,pagination: true
+			            ,remoteFilter: true
+			            ,clientPaging: false
+			            ,filterDelay: 500
+                        }).datagrid('enableFilter', [{
+                            field: 'cnro_doc',
+                            type: 'textbox'
+                        }, {
+                            field: 'ccod_ccosto',
+                            type: 'textbox'
+                        }, {
+                            field: 'ccod_art',
+                            type: 'textbox'
+                        }, {
+                            field: 'ccod_ficha',
+                            type: 'label'
+                        }, {
+                            field: 'ntotal',
+                            type: 'label'
+                        }]);
+                    } else if (ccod_menu == "010203" || ccod_menu == "010204") { //reporte de derecho de admision pregrado y posgrado
+                        //alert("");
+                        var dg = $('#' + contenedor + 'dgvlistado').datagrid({
+                            url: '@Url.Content("~/Reporte_derecho_de_admision_pregrado/json")' + (ccod_menu == "010203" ? "?ctipo=0" : (ccod_menu == "010204" ? "?ctipo=2" : ""))
+                        , method: 'get'
+			            , filterBtnIconCls: 'icon-filter'
+			            , pagination: true
+			            , remoteFilter: true
+			            , clientPaging: false
+			            , filterDelay: 500
+                        }).datagrid('enableFilter', [{
+                            field: 'ccod_ficha',
+                            type: 'label'
+                        }, {
+                            field: 'ntotal',
+                            type: 'label'
+                        }]);
+                    } else if (ccod_menu == "010205") { //reporte de tarifarios diversos
+                        //alert("");
+                        var dg = $('#' + contenedor + 'dgvlistado').datagrid({
+                            url: '@Url.Content("~/ReporteTarifariosDiversos/json")' + "?ctipo=3"
+                        , method: 'get'
+			            , filterBtnIconCls: 'icon-filter'
+			            , pagination: true
+			            , remoteFilter: true
+			            , clientPaging: false
+			            , filterDelay: 500
+                        }).datagrid('enableFilter', [{
+                            field: 'ccod_ficha',
+                            type: 'label'
+                        }, {
+                            field: 'ntotal',
+                            type: 'label'
+                        }]);
+                    }
+                }
+            });
+
+
+        }
+
+
+        function especiales(str) { // Reemplaza todos los caracteres especiales ajax (+,&) | sql server (') | xml (<,>)
+            str = str.replace(/&/g, "&#38;").replace(/</g, "&#60;").replace(/>/g, "&#62;").replace(/\+/g, "&#43;").replace(/"/g, "''"); //.replace(/°/g, "&#176;")
+            return str
+        }
+
+        function CAuxiliares_1(contenedor) {
+            $('#' + contenedor + 'txtcdsc_coa').textbox({ disabled: true,value:'' });
+            $('#' + contenedor + 'txtca_paterno').textbox({ disabled: true, value: '' });
+            $('#' + contenedor + 'txtca_materno').textbox({ disabled: true, value: '' });
+            $('#' + contenedor + 'txtcnombres').textbox({ disabled: true, value: '' });
+
+            if ($('#' + contenedor + 'cmbcdoc_id').combobox('getValue') == '06'){
+                $('#' + contenedor + 'txtcdsc_coa').textbox({ disabled: false });
+            } else {
+                $('#' + contenedor + 'txtca_paterno').textbox({ disabled: false });
+                $('#' + contenedor + 'txtca_materno').textbox({ disabled: false });
+                $('#' + contenedor + 'txtcnombres').textbox({ disabled: false });
+
+
+                $('#' + contenedor + 'txtca_paterno').textbox('textbox').bind('blur', function (e) {
+                    $('#' + contenedor + 'txtcdsc_coa').textbox('setValue', $('#' + contenedor + 'txtca_paterno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtca_materno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtcnombres').textbox('getValue'))
+                });
+                $('#' + contenedor + 'txtca_materno').textbox('textbox').bind('blur', function (e) {
+                    $('#' + contenedor + 'txtcdsc_coa').textbox('setValue', $('#' + contenedor + 'txtca_paterno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtca_materno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtcnombres').textbox('getValue'))
+                });
+                $('#' + contenedor + 'txtcnombres').textbox('textbox').bind('blur', function (e) {
+                    $('#' + contenedor + 'txtcdsc_coa').textbox('setValue', $('#' + contenedor + 'txtca_paterno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtca_materno').textbox('getValue') + ' ' + $('#' + contenedor + 'txtcnombres').textbox('getValue'))
+                });
+
+
+            }
+
+
+        }
+
+
+        function preliquidacion_calcular_detalle(contenedor) {
+
+
+            var nprecio = parseFloat($('#' + contenedor + 'txtnprecio').numberbox('getValue'));
+            $('#' + contenedor + 'txtnimp_btd').textbox('setValue', parseFloat(nprecio));
+            var bafec_imp = $('#' + contenedor + 'txtbafec_imp').textbox('getValue');
+            //alert(bafec_imp)
+            var nund = parseInt($('#' + contenedor + 'txtnund').numberbox('getValue'));
+
+            $('#' + contenedor + 'txtnimp_btd').numberbox('setValue', nprecio * nund);
+            //$('#' + contenedor + 'txtnimp_dtd').numberbox('setValue', bafec_imp);
+            $('#' + contenedor + 'txtnimp_ntd').numberbox('setValue', nprecio * nund);
+
+            var nimp_ntd = parseFloat($('#' + contenedor + 'txtnimp_ntd').numberbox('getValue'));
+            $('#' + contenedor + 'txtnimp_itd').numberbox('setValue', (bafec_imp === "True" ? nimp_ntd * 0.18 : 0.00));
+            var nimp_itd = parseFloat($('#' + contenedor + 'txtnimp_itd').numberbox('getValue'));
+            $('#' + contenedor + 'txtnimp_ttd').numberbox('setValue', nimp_ntd + nimp_itd);
+
+        }
+
+
+
+
+        function mostrar_consulta(contenedor, cvalor, cdsc_pago, ctipo) {
+
+
+            //alert(ctipo)
+
+
+
+            if ($('#' + contenedor + 'formulario').form('validate') == false) {
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+
+            if ($("input[name='" + contenedor + "rdbconsultapor']:checked").val() == "pantalla") {
+
+                $('#' + contenedor + 'btnbuscar').linkbutton({
+                    text: 'Buscar <img src = "@Url.Content("~/img/712.gif")" align = absmiddle>', disabled: true
+                });
+
+                $('#' + contenedor + 'grilla').datagrid(
+					{
+					    url: '@Url.Content("~/Reporte1/Result")'
+						,queryParams:
+							{
+							    cdsc_pago: cdsc_pago, cvalor: cvalor, ctipo: ctipo
+							}
+						,onLoadSuccess: function (data) {
+						    $('#' + contenedor + 'btnbuscar').linkbutton({
+						        text: 'Buscar', disabled: false
+						    });
+						    $('#' + contenedor + 'rptpantalla').window('resize', { width: $(window).width() - 100, height: $(window).height() - 100 }).window('open').window('center');
+						    //$('#' + contenedor + 'rptpantalla').window('open').window('center');
+						}
+                        ,onLoadError: function (data) {
+                            alert("Error: intente denuevo");
+                            //alert(data.responseText);
+                            $('#' + contenedor + 'btnbuscar').linkbutton({
+                                text: 'Buscar', disabled: false
+                            });
+                        }
+					}
+				)
+
+            } else {
+                document.location.href = "@Url.Content("~/reporte1/excel")" + "?cdsc_pago=" + cdsc_pago + "&cvalor=" + cvalor + "&ctipo=" + ctipo
+            }
+        }
+
+
+        function form030101(contenedor) { //Lactoferrin Reporte
+            //alert(contenedor)
+            var cstatus = $('#' + contenedor + 'cmbcstatus').combobox('getValue')
+            if ($("input[name='" + contenedor + "rdbconsultapor']:checked").val() == "pantalla") {
+
+                $('#' + contenedor + 'btnbuscar').linkbutton({
+                    text: 'Buscar <img src = "@Url.Content("~/img/712.gif")" align = absmiddle>', disabled: true
+                });
+
+                $('#' + contenedor + 'grilla').datagrid(
+					{
+					    url: '@Url.Content("~/Lactoferrin/Result")'
+						,queryParams:
+							{
+							    cstatus: cstatus
+							}
+						,onLoadSuccess: function (data) {
+						    $('#' + contenedor + 'btnbuscar').linkbutton({
+						        text: 'Buscar', disabled: false
+						    });
+						    $('#' + contenedor + 'rptpantalla').window('resize', { width: $(window).width() - 100, height: $(window).height() - 100 }).window('open').window('center');
+						}
+                        ,onLoadError: function (data) {
+                            alert("Error: intente denuevo");
+                            //alert(data.responseText);
+                            $('#' + contenedor + 'btnbuscar').linkbutton({
+                                text: 'Buscar', disabled: false
+                            });
+                        }
+					}
+				)
+
+            } else {
+                document.location.href = "@Url.Content("~/Lactoferrin/excel")" + "?cstatus=" + cstatus + "&page=0&rows=0&sort=nid&order=desc"
+            }
+        }
+
+
+        function form030101_detalle(contenedor) { //Lactoferrin Reporte
+
+
+            var row = $('#' + contenedor + 'grilla').datagrid('getSelected');
+            if (row) {
+                ccod_ficha = row.ccod_ficha
+            }
+
+            $('#' + contenedor + '_rptpantalla2').window({
+                title: 'Informacion',
+                width: $(window).width() - 500,
+                height: $(window).height() - 50,
+                closed: false,
+                modal: true,
+                top: ($(window).height() - ($(window).height() - 50)) * 0.5,
+                left: ($(window).width() - ($(window).width() - 500)) * 0.5
+            });
+
+            $('#' + contenedor + 'grilla2').datagrid({
+				url: '@Url.Content("~/Lactoferrin/Result2")'
+				,queryParams:
+					{
+					    ccod_ficha: ccod_ficha
+					}
+				, onLoadError: function (data) {
+                    alert("Error: intente denuevo");
+                }
+			})
+
+
+
+
+        }
+
+
+
+        function mostrar_consulta1(contenedor) {
+            //alert('')
+            //var cstatus = $('#' + contenedor + 'cmbcstatus').combobox('getValue')
+            if ($("input[name='" + contenedor + "rdbconsultapor']:checked").val() == "pantalla") {
+
+            } else {
+                var dfecini = $('#' + contenedor + 'txtddoc_fch').textbox('getValue')
+                var dfecfin = $('#' + contenedor + 'txtddoc_fch2').textbox('getValue')
+                document.location.href = "@Url.Content("~/m01f0201/excel")" + "?dfecini=" + dfecini + "&dfecfin=" + dfecfin
+            }
+        }
+
+
+
+        function mostrar_consulta2(contenedor) {
+            //alert('')
+            //var cstatus = $('#' + contenedor + 'cmbcstatus').combobox('getValue')
+            if ($("input[name='" + contenedor + "rdbconsultapor']:checked").val() == "pantalla") {
+            } else {
+                var dfecini = $('#' + contenedor + 'txtddoc_fch').textbox('getValue')
+                var dfecfin = $('#' + contenedor + 'txtddoc_fch2').textbox('getValue')
+                document.location.href = "@Url.Content("~/m01f0202/excel")" + "?dfecini=" + dfecini + "&dfecfin=" + dfecfin
+            }
+        }
+
+        function refreshPanel(url) {
+            var tab = $('#tabs_contenedor').tabs('getSelected');  //Obtiene ubicacion en que tab me encuentro
+            tab.panel('refresh', url); //
+        }
+
+
+        function usuarios_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/usuarios/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        type: "post",
+                        data: { 'xml': escape(xml) },
+                        success: function (data) {
+                            if (data == "ok") {
+                                refreshPanel("@Url.Content("~/usuarios/lista")?accion=listado&contenedor=" + contenedor)
+                                $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            } else {
+                                alert("Error:\n\n" + data.substring(2, 500))
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert(status);
+                        }
+                    });
+
+                }
+
+            })
+            //console.log(generar_xml(formulario))
+        }
+
+        function cursos_grabar(contenedor, accionsql, id) {
+
+            //alert("aqui")
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/gestion/grabar")?contenedor=" + contenedor + "&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        type: "post",
+                        data: { 'xml': escape(xml) },
+                        success: function (data) {
+                            if (data == "ok") {
+                                refreshPanel("@Url.Content("~/gestion/lista")?accion=listado&contenedor=" + contenedor)
+                                $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            } else {
+                                //alert("Error:\n\n" + data.substring(2, 500))
+                                $.messager.alert('Mensaje', data.substring(2, 500), 'error');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert(status);
+                        }
+                    });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+        function laboratorio_online_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/laboratorio/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        if (data == "ok") {
+                            refreshPanel("@Url.Content("~/laboratorio/lista")?accion=listado&contenedor=" + contenedor)
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                        } else {
+                            alert("Error:\n\n" + data.substring(2, 500))
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+        function citasmedicas_online_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/laboratorio/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        if (data == "ok") {
+                            refreshPanel("@Url.Content("~/citasmedicas/lista")?accion=listado&contenedor=" + contenedor)
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                        } else {
+                            alert("Error:\n\n" + data.substring(2, 500))
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+
+
+        function medicos_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/medicos/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        if (data == "ok") {
+                            refreshPanel("@Url.Content("~/medicos/lista")?accion=listado&contenedor=" + contenedor)
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                        } else {
+                            alert("Error:\n\n" + data.substring(2, 500))
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+
+
+        function co_cambiar_estado(contenedor) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/cocambiarestado/grabar")?contenedor=" + contenedor,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        if (data == "ok") {
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            $('#' + contenedor + "formulario").form('clear').form('resetValidation')
+                        } else {
+                            alert("Error:\n\n" + data.substring(2, 500))
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+        function cauxiliares_grabar(contenedor, accionsql, ccod_coa) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/cauxiliares/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&ccod_coa=" + ccod_coa,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        //alert(data);
+                        if (data.substring(0,2)== "ok") {
+                            refreshPanel("@Url.Content("~/cauxiliares/lista")?accion=listado&contenedor=" + contenedor)
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                        } else {
+                            alert("Error:\n\n" + data.substring(2, 500))
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+        function preliquidacion_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            if (parseFloat($('#' + contenedor + "txtnimp_t").textbox('getValue')) <= 0) {
+                $.messager.alert('Error', 'El Total no puede ser menor o igual a cero', 'error');
+                return
+            }
+
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+
+                    var rows = $('#' + contenedor + 'dvgdetalle').datagrid('getRows');
+                    var fields = $('#' + contenedor + 'dvgdetalle').datagrid('getColumnFields')
+                    for (var i = 0; i < rows.length; i++) {
+                        xml += "<detalle>"
+                        xml += "<cdoc>" + $('#' + contenedor + 'txtcdoc').textbox('getValue') + "</cdoc>"
+                        xml += "<cdoc_serie>" + $('#' + contenedor + 'txtcdoc_serie').textbox('getValue') + "</cdoc_serie>"
+                        xml += "<cdoc_nro>" + $('#' + contenedor + 'txtcdoc_nro').textbox('getValue') + "</cdoc_nro>"
+                        for (var z = 0; z < fields.length; z++) {
+                            xml += "<" + fields[z] + ">" + escape(rows[i][fields[z]]) + "</" + fields[z] + ">"
+                        }
+                        xml += "</detalle>"
+                    }
+
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/preliquidacion/grabar")?contenedor=" + contenedor + "&accion=grabar&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                    dataType: "html",
+                    type: "post",
+                    data: { 'xml': escape(xml) },
+                    success: function (data) {
+                        if (data.substring(0,2) == "ok") {
+                            refreshPanel("@Url.Content("~/preliquidacion/lista")?accion=listado&contenedor=" + contenedor)
+                            $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            open_safetypay(contenedor, data.substring(2, 500))
+                            /*
+                            $('#' + contenedor + 'divventana').window({
+                                title: 'Informacion',
+                                width: $(window).width() - 500,
+                                height: $(window).height() - 50,
+                                closed: false,
+                                modal: true,
+                                top: ($(window).height() - ($(window).height() - 50)) * 0.5,
+                                left: ($(window).width() - ($(window).width() - 500)) * 0.5
+                            });
+                            */
+                            //$('#' + contenedor + 'divventana2').window('open');
+                            //$('#' + contenedor + 'fradetalle2').attr('src', '').attr('src', '@Url.Content("~/usuarios/formulario")');
+
+
+                            //alert(data.substring(2, 500))
+                        } else {
+                            //alert("Error:\n\n" + data.substring(2, 500))
+                            $.messager.alert('Error', data.substring(2, 500) + '<br><br>Consulte a su administrador del sistema', 'error');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                                alert(status);
+                    }
+                });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
+
+
+
+
+        function generar_xml(formulario) {
+            var xml
+            var id
+            xml = ""
+            //xml += "<root>"
+            //xml += "<cabecera>"
+            $('.' + formulario).each(function (i) {
+                id = $(this).attr('id')
+                //alert( id.substr(id.indexOf("_") + 1,3) )
+                switch (id.substr(id.indexOf("_") + 1, 3)) {
+                    case "txt":
+                        xml += "<" + mcampo(id) + ">" + especiales($('#' + id).textbox('getValue')) + "</" + mcampo(id) + ">"
+                        break;
+                    case "cmb":
+                        xml += "<" + mcampo(id) + ">" + especiales($('#' + id).combobox('getValue')) + "</" + mcampo(id) + ">"
+                        break;
+                    default:
+                }
+            });
+            //xml += "</cabecera>"
+            //xml += "</root>"
+
+            return xml
+        }
+
+
+        function mcampo(str) {
+            position = -1
+            if (str.indexOf("txt") > -1) {
+                position = str.indexOf("txt")
+                str = str.substring(position + 3, 100)
+            }
+
+            if (str.indexOf("cmb") > -1) {
+                position = str.indexOf("cmb")
+                str = str.substring(position + 3, 100)
+            }
+
+            if (str.indexOf("chk") > -1) {
+                position = str.indexOf("chk")
+                str = str.substring(position + 3, 100)
+            }
+
+            if (str.indexOf("rb") > -1) {
+                position = str.indexOf("rb")
+                str = str.substring(position + 2, 100)
+            }
+
+
+            return str
+        }
+
+
+        function roles_grabar(contenedor, accionsql, id) {
+
+
+            if ($('#' + contenedor + 'formulario').form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+
+            //alert($('#' + contenedor + 'treformularios').tree('getChecked'))
+
+
+
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+                    //alert(contenedor + 'formulario')
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + 'formulario')
+                    xml += "</cabecera>"
+
+                    //console.log(xml)
+                    //return
+
+                    /*Construir xml para el detallado*/
+                    var nodes = $('#' + contenedor + 'treformularios').tree('getChecked');
+                    for (var i = 0; i < nodes.length; i++) {
+                        if (Left(nodes[i].id, 1) != "P") {
+
+                            //alert(nodes[i].id)
+                            //xml += "<detalle>"
+                            //xml += "<ccod_modulo>"+(nodes[i].id).substr(1,2)+"</ccod_modulo>"
+                            //xml += "<ccod_menu>"+(nodes[i].id).substr(3,50)+"</ccod_menu>"
+                            //xml += "</detalle>"
+
+                            for (var z = 1; z <= ((nodes[i].id).substr(3, 50)).length / 2; z++) {
+                                //xml += "<detalle><ccod_menu>" +  $(this).attr("value").substring(0, i * 2) + "</ccod_menu></detalle>"
+
+                                xml += "<detalle>"
+                                xml += "<ccod_modulo>" + (nodes[i].id).substr(1, 2) + "</ccod_modulo>"
+                                xml += "<ccod_menu>" + (nodes[i].id).substr(3, z * 2) + "</ccod_menu>"
+                                xml += "</detalle>"
+
+                            }
+
+
+                        }
+                    }
+
+
+                    /*
+					for(var i = 1; i <= ($(this).attr("value").length/2); i++){
+						xml += "<detalle><ccod_menu>" +  $(this).attr("value").substring(0, i * 2) + "</ccod_menu></detalle>"
+					}
+					*/
+
+
+                    xml += "</root>"
+
+                    //console.log(xml)
+                    //return
+
+                    $.ajax({
+
+
+                        url: "@Url.Content("~/roles/grabar")?contenedor = " + contenedor + "&accion=grabar&accionsql=" + accionsql + '&id=' + id,
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        type: "post",
+                        data: { 'xml': escape(xml) },
+                        success: function (data) {
+                            if (data == "ok") {
+                                //alert("ok")
+                                refreshPanel('@Url.Content("~/roles/lista")?accion=listado&contenedor=' + contenedor)
+                                $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            } else {
+                                alert("Error:\n\n" + data.substring(2, 500))
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert(status);
+                        }
+                    });
+
+                }
+
+            })
+            //console.log(generar_xml(formulario))
+        }
+
+        function Left(str, n) {
+            if (n <= 0)
+                return "";
+            else if (n > String(str).length)
+                return str;
+            else
+                return String(str).substring(0, n);
+        }
+
+
+        function buscar_fila_repetida_grilla(contenedor, grilla, campobuscar, valorbuscar, estado) {
+
+            //alert(campobuscar + '-' + valorbuscar)
+            var row = $('#' + contenedor + grilla).datagrid('getSelected'); //row seleccionado
+            var rowIndex = $('#' + contenedor + grilla).datagrid("getRowIndex", row); //extraigo su index
+            var rows = $('#' + contenedor + grilla).datagrid('getData').rows;
+            salida = false
+            for (i = 0; i < rows.length; i++) {
+                if (rows[i][campobuscar] == valorbuscar) {
+                    salida = (estado === "E" && rowIndex === i ? false : true);
+                }
+            }
+            //alert(rowIndex)
+            return salida
+        }
+
+
+
+
+
+        function movimientos_detalle_eventos1(contenedor, nombre, window, accion, estado,campobuscar,valorbuscar) {
+
+            //alert(estado + '-' + campobuscar + '-' + valorbuscar)
+
+            var row = $('#' + contenedor + nombre).datagrid('getSelected');
+            var rowIndex = $('#' + contenedor + nombre).datagrid("getRowIndex", row);
+
+            if (accion == "eliminar" || (accion == "abrir" && estado == "E")) {
+                if (rowIndex == -1) {
+                    $.messager.alert('Error', 'Debe de seleccionar una fila', 'error');
+                    return
+                }
+            }
+
+            if (accion == "abrir") {
+                if (estado == "E") {
+                    $('#' + contenedor + window).window('options').index = rowIndex
+                    $('#' + contenedor + 'txtccod_art').textbox('setValue', row.ccod_art)
+                    $('#' + contenedor + 'txtcdsc_art').textbox('setValue', row.cdsc_art)
+                    $('#' + contenedor + 'txtnprecio').numberbox('setValue', row.nprecio)
+                    $('#' + contenedor + 'txtnund').numberbox('setValue', row.nund)
+                    $('#' + contenedor + 'txtnimp_btd').numberbox('setValue', row.nimp_b)
+                    $('#' + contenedor + 'txtnimp_dtd').numberbox('setValue', row.nimp_d)
+                    $('#' + contenedor + 'txtnimp_ntd').numberbox('setValue', row.nimp_n)
+                    $('#' + contenedor + 'txtnimp_itd').numberbox('setValue', row.nimp_i)
+                    $('#' + contenedor + 'txtnimp_ttd').numberbox('setValue', row.nimp_t)
+                    $('#' + contenedor + 'txtbafec_imp').textbox('setValue', row.bafec_imp)
+                }
+                $('#' + contenedor + window).window('open').window('options').accionsql = estado;
+            }
+            else if (accion == "cerrar") {
+
+                if ($('#' + contenedor + window).form('validate') == false) {
+                    $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                    return
+                }
+
+                if (buscar_fila_repetida_grilla(contenedor, nombre, campobuscar, valorbuscar, estado)) {
+                    $.messager.alert('Error', 'El valor ya se encuentra en la grilla', 'error');
+                    return
+                }
+
+
+                if (estado == "G") {
+                    $('#' + contenedor + nombre).datagrid('appendRow', {
+                        ccod_art: $('#' + contenedor + 'txtccod_art').textbox('getValue')
+                        ,cdsc_art: $('#' + contenedor + 'txtcdsc_art').textbox('getValue')
+                        ,nprecio: $('#' + contenedor + 'txtnprecio').numberbox('getValue')
+                        ,nund: $('#' + contenedor + 'txtnund').numberbox('getValue')
+                        ,nimp_b: $('#' + contenedor + 'txtnimp_btd').numberbox('getValue')
+                        ,nimp_d: $('#' + contenedor + 'txtnimp_dtd').numberbox('getValue')
+                        ,nimp_n: $('#' + contenedor + 'txtnimp_ntd').numberbox('getValue')
+                        ,nimp_i: $('#' + contenedor + 'txtnimp_itd').numberbox('getValue')
+                        ,nimp_t: $('#' + contenedor + 'txtnimp_ttd').numberbox('getValue')
+                        ,bafec_imp: $('#' + contenedor + 'txtbafec_imp').textbox('getValue')
+                    });
+                } else if (estado == "E") {
+                    $('#' + contenedor + nombre).datagrid('updateRow', {
+                        index: $('#' + contenedor + window).window('options').index,
+                        row: {
+                            ccod_art: $('#' + contenedor + 'txtccod_art').textbox('getValue')
+                            ,cdsc_art: $('#' + contenedor + 'txtcdsc_art').textbox('getValue')
+                            ,nprecio: $('#' + contenedor + 'txtnprecio').numberbox('getValue')
+                            ,nund: $('#' + contenedor + 'txtnund').numberbox('getValue')
+                            ,nimp_b: $('#' + contenedor + 'txtnimp_btd').numberbox('getValue')
+                            ,nimp_d: $('#' + contenedor + 'txtnimp_dtd').numberbox('getValue')
+                            ,nimp_n: $('#' + contenedor + 'txtnimp_ntd').numberbox('getValue')
+                            ,nimp_i: $('#' + contenedor + 'txtnimp_itd').numberbox('getValue')
+                            ,nimp_t: $('#' + contenedor + 'txtnimp_ttd').numberbox('getValue')
+                            ,bafec_imp: $('#' + contenedor + 'txtbafec_imp').textbox('getValue')
+                        }
+                    });
+                }
+                $('#' + contenedor + window).form("clear").form("resetValidation").window('close')
+
+            } else if (accion == "eliminar") {
+                $('#' + contenedor + nombre).datagrid('deleteRow', rowIndex);
+            }
+
+            //alert("aqui")
+
+            $('#' + contenedor + 'txtnimp_b').textbox('setValue', round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_b'), 2))
+            $('#' + contenedor + 'txtnimp_d').textbox('setValue', round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_d'), 2))
+            $('#' + contenedor + 'txtnimp_n').textbox('setValue', round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_n'), 2))
+            $('#' + contenedor + 'txtnimp_i').textbox('setValue', round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_i'), 2))
+            $('#' + contenedor + 'txtnimp_t').textbox('setValue', round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_t'), 2))
+
+            //alert(round(easyui_datagrid_sumar_col(contenedor, nombre, 'nimp_btd')));
+
+            //alert(contenedor + '-' + nombre)
+
+        }
+
+
+        function easyui_datagrid_sumar_col(contenedor, grilla, campo_suma) {
+            //alert("aqui")
+            var ntotal = 0;
+            var rows = $('#' + contenedor + grilla).datagrid('getData').rows;
+            for (i = 0; i < rows.length; i++) {
+                ntotal += parseFloat(rows[i][campo_suma])
+                //alert(rows[i][campo_suma])
+            }
+            //alert(ntotal)
+            return ntotal;
+        }
+
+
+
+        function round(value, decimals) {
+            return Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals);
+        }
+
+
+
+        function buscador(filtro, config, cajas, buscampos_mostrar, buscampos, bustabla, buscondicion, buscampoorden, bustipoorden, colrep) {
+
+            //alert("aqui" + filtro)
+
+
+            var cdata = "["
+            for (var i = 0; i < config.length; i++) {
+                cdata += (i === 0 ? "" : ",") + "{hidden:" + config[i][4] + ",align:'" + config[i][3] + "',sortable:true,field:'" + config[i][0] + "',title:'" + config[i][1] + "',width:" + config[i][2] + "}"
+            }
+            cdata += "]"
+
+
+            if (filtro == '0') {
+
+                $('#txtbuscador_valor').textbox('setValue', '');
+
+                //alert(config)
+
+                cdata2 = "[{'id':'Todos',text:'Todos'}"
+                for (var i = 0; i < config.length; i++) {
+                    if (config[i][4] == false) {
+                        cdata2 += ",{'id':'" + config[i][0] + "','text':'" + config[i][1] + "'}"
+                        //alert(config[i][0])
+                    }
+                }
+                cdata2 += "]"
+
+                $('#cmbbuscador_campo').combobox('loadData', eval(cdata2));
+                $('#cmbbuscador_campo').combobox('setValue', 'Todos');
+
+            }
+
+
+            $('#w').window('open');
+
+            //alert(buscampoorden)
+
+            $('#dgvbusqueda').datagrid({
+                url: '@Url.Content("~/json")',
+                method: 'post',
+                sortName: buscampoorden,
+                sortOrder: bustipoorden,
+                onBeforeLoad: function () {
+                    //$(this).datagrid('loadData', {"total":0,"rows":[]});
+                }
+				, queryParams: { sort: buscampoorden, order: bustipoorden, buscampos_mostrar: buscampos_mostrar, buscampos: buscampos, bustabla: bustabla, buscondicion: buscondicion, filtro: filtro, buscador_campo: $('#cmbbuscador_campo').combobox('getValue'), buscador_valor: $('#txtbuscador_valor').textbox('getValue') },
+                columns: [eval(cdata)]
+            })
+
+
+
+            document.getElementById('btnbuscar').onclick = function () { var filtro = ($('#cmbbuscador_campo').combobox('getValue') === 'Todos' ? '0' : '1'); buscador(filtro, config, cajas, buscampos_mostrar, buscampos, bustabla, buscondicion, buscampoorden, bustipoorden) }
+            document.getElementById('btnaceptar').onclick = function () { entregar_datos('', 'dgvbusqueda', cajas) }
+
+
+
+
+        }
+
+        function entregar_datos(contenedor, dgv, parametrizacion) {
+
+
+            if (esta_seleccionado(contenedor + dgv) == false) {
+                $.messager.alert('Error', 'Debe de seleccionar una fila', 'error');
+                return
+            }
+
+
+            var row = $('#' + contenedor + dgv).datagrid('getSelected');
+
+            for (var i = 0; i < eval(parametrizacion).length; i++) {
+                //alert()
+
+                //alert($('#' + contenedor + eval(parametrizacion)[i][1]).attr('class'))
+                id = '#' + contenedor + parametrizacion[i][1]
+                switch (id.substr(id.indexOf("_") + 1, 3)) {
+                    case "txt":
+                        //xml += "<"+mcampo(id)+">" + $('#' + id).textbox('getValue') + "</"+mcampo(id)+">"
+                        $('#' + contenedor + eval(parametrizacion)[i][1]).textbox('setValue', row[eval(parametrizacion)[i][0]])
+                        break;
+                    case "cmb":
+                        $('#' + contenedor + eval(parametrizacion)[i][1]).combobox('setValue', row[eval(parametrizacion)[i][0]])
+                        //xml += "<"+mcampo(id)+">" + $('#' + id).combobox('getValue') + "</"+mcampo(id)+">"
+                        break;
+                    default:
+                }
+
+                //$('#' + contenedor + eval(parametrizacion)[i][1]).textbox('setValue',row[eval(parametrizacion)[i][0]])
+
+
+
+                /*
+                $('#' + contenedor + eval(parametrizacion)[i][1]).trigger({
+                    type: 'keypress',
+                    which: 13
+                });
+                */
+
+            }
+
+
+            //$('#cmbbuscador_campo').combobox('loadData', []);
+
+            $('#w').window('close');
+
+
+
+
+
+        }
+
+
+        function esta_seleccionado(dgv) {
+            var row = $('#' + dgv).datagrid('getSelected');
+            var rowIndex = $('#' + dgv).datagrid("getRowIndex", row);
+            if (rowIndex >= 0) {
+                return true
+            } else {
+                return false
+            }
+        }
+
+
+
+        function open_safetypay(contenedor, pagina) {
+            //$('#' + contenedor + 'divsafetypay').window('open').window('center')
+            //alert("aqui")
+
+            var vwidth = 900
+            var vheight = 500
+
+            var left = (screen.width / 2) - (vwidth / 2);
+            var top = (screen.height / 2) - (vheight / 2);
+            //WindowDialog.closeAll();
+            var myWindow = window.open(pagina, "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+            myWindow.opener = window;
+            myWindow.focus();
+            //myWindow.focus();
+        }
+
+
+        function print_view(tipodoc, seriedoc, numdoc, dfchcrea) {
+
+            var vwidth = 900
+            var vheight = 600
+
+            var left = (screen.width / 2) - (vwidth / 2);
+            var top = (screen.height / 2) - (vheight / 2);
+
+            var fechaString = dfchcrea;
+            var partes = fechaString.split(' '); // Dividir la cadena en fecha y hora
+            var fechaPartes = partes[0].split('/'); // Dividir la parte de la fecha en día, mes y año
+            var horaPartes = partes[1].split(':'); // Dividir la parte de la hora en horas y minutos
+
+            // Crear un objeto Date a partir de las partes analizadas
+            var fecha = new Date(
+              parseInt(fechaPartes[2]), // Año
+              parseInt(fechaPartes[1]) - 1, // Mes (restamos 1 ya que en JavaScript los meses van de 0 a 11)
+              parseInt(fechaPartes[0]) // Día
+            );
+
+            if (fecha <= new Date(2023, 7, 24)) { //Fecha de cambio a Digiflow Cloud
+                //  var myWindow = window.open("recibopdf_qr.asp?cdoc=" + tipodoc + "&cdoc_serie=" + seriedoc + "&cdoc_nro=" + numdoc, "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+                //  var myWindow = window.open("https://dga2.upch.edu.pe/facturacionweb/pdf_soap.asp?corigen=0&ccod_doc=" + $.trim(tipodoc) + "&cdoc_serie=" + $.trim(seriedoc) + "&cdoc_nro=" + $.trim(numdoc), "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+                var myWindow = window.open("https://dga2.upch.edu.pe/facturacionweb/pdf_soap_onpremise.asp?corigen=0&ccod_doc=" + $.trim(tipodoc) + "&cdoc_serie=" + $.trim(seriedoc) + "&cdoc_nro=" + $.trim(numdoc), "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+            } else {
+                var myWindow = window.open("http://172.17.100.196:85/wspdfdigiflow/pdf_soap.asp?corigen=0&ccod_doc=" + $.trim(tipodoc) + "&cdoc_serie=" + $.trim(seriedoc) + "&cdoc_nro=" + $.trim(numdoc), "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+            }
+
+            //var myWindow = window.open("https://dga2.upch.edu.pe/facturacionweb/pdf_soap.asp?corigen=0&ccod_doc=" + $.trim(tipodoc) + "&cdoc_serie=" + $.trim(seriedoc) + "&cdoc_nro=" + $.trim(numdoc), "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+            //var myWindow = window.open("http://172.17.100.196:85/wspdfdigiflow/pdf_soap.asp?corigen=0&ccod_doc=" + $.trim(tipodoc) + "&cdoc_serie=" + $.trim(seriedoc) + "&cdoc_nro=" + $.trim(numdoc), "Preview", "width=" + vwidth + ", height=" + vheight + ", top=" + top + ", left=" + left);
+
+        }
+
+
+
+
+
+
+
+
+    </script>
+</head>
+<body class="easyui-layout">
+    <div data-options="region:'north',border:false" style="width:100%;height:50px;padding:0px;background-color:@ViewBag.ccolor_fondo">
+        <!--;background-color:#006E41-->
+
+        <div style="position:absolute;top:5px;left:10px;"><img src="@ViewBag.cruta_logo" width="65%" height = "65%"></div>
+        <div style="position:absolute;top:10px;left:140px;font-weight:bold;font-size:14px;color:#ffffff;">@ViewBag.cnomapp</div>
+        <div style="position:absolute;top:26px;left:140px;font-size:11px;color:#ffffff;">@ViewBag.cversion</div>
+        
+        <!--<div style="margin:26px 0;"></div>-->
+
+        <div style="position:absolute;top:11px;right:75px;text-align:right;color:#ffffff">
+            <b>ROL: @Session["cdsc_grupo"]</b> 
+            <div style='height:3px;'></div>
+            <b>USUARIO: @Session["cdsc_usuario"]</b> 
+        </div>
+
+
+        <div style="position:absolute;top:7px;right:13px;">
+            <a href="#" class="easyui-splitbutton" data-options="menu:'#mm1'"><img src="img/face.jpg" onerror="this.src='@Url.Content("~/img/face.jpg")';" width="31px" height="31px" style='border-radius: 25px;'></a>
+        </div>
+
+
+
+        <div id="mm1" style="">
+            <div data-options="iconCls:'icon-tip',disabled:true">Dashboard</div>
+            <div data-options="iconCls:'icon-user',disabled:true" onClick="addPanel('Editar perfil','999998')">Editar perfil</div>
+            <div data-options="iconCls:'icon-lock',disabled:true" onClick="addPanel('Cambiar contraseña','999999')">Cambiar contrasena</div>
+            <div data-options="iconCls:'icon-undo',separator:'true'">-</div>
+            <div data-options="iconCls:'icon-redo'" onClick="javascript:document.location.href='@Url.Content("~/Home/Salir")';">Salir</div>
+        </div>
+
+
+    </div>
+    <div data-options="region:'west',split:true,title:'Modulos'" style="width:250px;padding:0px;height:100%;text-align:center">
+        <div class="easyui-accordion" style="height:100px" fit=true>
+            @Html.Raw(@ViewBag.cadena)
+        </div>
+    </div>    
+    <div data-options="region:'center',title:''" style="height:100%">
+        <div id="tabs_contenedor" class="easyui-tabs" fit="true" border="false">
+            <div title="Dashboard" data-options="iconCls:'icon-tip'" style="background-color:#E9EAE5">
+                <div id="p" class="easyui-panel" title="" style="width:700px;padding:0px;" fit="true">
+                    <div id="cc" class="easyui-layout" fit='true' border='false'>
+                        <div data-options="region:'center',border:false,split:true" style="padding:0px">
+                            <div id="p" class="easyui-panel" title="Novadades en el Software" style="" fit="true">
+                                <table id="<%=contenedor%>dgvFormasdePago_detalle" sortName="fusu_crea" sortOrder="desc" fit=true class="easyui-datagrid" style="width:900px;height:500px" title="" pagination="false" data-options="nowrap:false,singleSelect:true,rownumbers:true,emptyMsg:'<font color=red>No hay registros para mostrar</font>'">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'nid',width:50,align:'center'">Id</th>
+                                            <th data-options="field:'cversion',width:120,align:'center'">Version</th>
+                                            <th data-options="field:'dfecha',width:120,align:'center'">Implantacion</th>
+                                            <th data-options="field:'cdsc',width:500">Descripcion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>                                       
+                                        <tr>
+                                            <td>1</td>
+                                            <td>v1.0.0</td>
+                                            <td>2020-08-17 02:17</td>
+                                            <td>Instalacion de Plataforma de Gestion</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div data-options="region:'south',border:false" style="height:18px;padding:0px;background-color:#E0ECFF"></div>
+    <!--Venta de Busqueda-->
+    <div id="w" class="easyui-window" title="Buscador" modal=true minimizable=false maximizable=true collapsible=false closed=true data-options="footer:'#footer'" style="width:740px;height:680px;padding:10px">
+        <table id="dgvbusqueda" class="easyui-datagrid" nowrap="false" title="" style="width:700px;height:450px" data-options="singleSelect:true,collapsible:true,pagination:true,emptyMsg:'<font color=red>No existen registros</font>',onDblClickRow:function(){ $('#btnaceptar').trigger('click');  }"></table>
+        <div style='height:5px;'></div>
+        <fieldset>
+            <legend>FILTROS</legend>
+            <select id="cmbbuscador_campo" class="easyui-combobox" data-options="selectOnNavigation:true,editable:false,valueField:'id',textField:'text',onChange: function(rec){ if ( $(this).combobox('getValue') == 'Todos') { } else { $('#txtbuscador_valor').textbox('textbox').focus() }  ; }" name="state" style="width:680px;height:25px;"></select>
+            <!--,onChange: function(rec){ if ( $(this).combobox('getValue') == 'Todos') { $('#txtbuscador_valor').textbox({disabled:true,value: ''}) ; $('#btnbuscar').trigger('click'); } else { $('#txtbuscador_valor').textbox({disabled:false}).textbox('textbox').focus() ; enter_buscador()    }  ;   }-->
+            <div style='height:2px;'></div>
+            <input id="txtbuscador_valor" class="easyui-textbox" data-options="prompt:'Valor',disabled:false" style="width:680px;height:25px">
+            <div style='height:5px;'></div>
+            <a id="btnbuscar" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:680px" onclick="">Buscar</a>
+        </fieldset>
+    </div>
+    <div id="footer" style="padding:10px;text-align:right">
+        <a href="#" id="btnaceptar" class="easyui-linkbutton" data-options="iconCls:'icon-ok2'" onClick="alert('')" style="width:80px">Aceptar</a>
+    </div>
+    <!---->
+</body>
+</html>
+<script>
+    $(document).ready(function () {
+        //function enter_buscador() {
+        var t = $('#txtbuscador_valor');
+        t.textbox('textbox').bind('keydown', function (e) {
+            if (e.keyCode == 13) {   // when press ENTER key, accept the inputed value.
+                //alert('aquienter')
+                $('#btnbuscar').trigger('click');
+            }
+        });
+        //}
+    });
+</script>

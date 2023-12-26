@@ -1,0 +1,205 @@
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@{
+    Layout = null;
+
+}
+
+<!DOCTYPE html>
+
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:x="urn:schemas-microsoft-com:office:excel"
+      xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+    <!--[if gte mso 9]>
+        <xml>
+        <x:ExcelWorkbook>
+            <x:ExcelWorksheets>
+                <x:ExcelWorksheet>
+                    <x:Name>Hoja1</x:Name>
+                    <x:WorksheetOptions>
+                        <x:DisplayGridlines/>
+                    </x:WorksheetOptions>
+                </x:ExcelWorksheet>
+            </x:ExcelWorksheets>
+        </x:ExcelWorkbook>
+        </xml><![endif]-->
+    <style type="text/css">
+        table {
+            table-layout: fixed;
+        }
+
+        td {
+            white-space: nowrap;
+        }
+
+        .text {
+            mso-number-format: "\@@"; /*force text*/
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                <b>FRegistro</b>
+            </td>
+            <td>
+                <b>Documento</b>
+            </td>
+            <td>
+                <b>Paterno</b>
+            </td>
+            <td>
+                <b>Materno</b>
+            </td>
+            <td>
+                <b>Nombres</b>
+            </td>
+            <td>
+                <b>Direccion</b>
+            </td>
+            <td>
+                <b>Celular</b>
+            </td>
+            <td>
+                <b>Email</b>
+            </td>
+            <td>
+                <b>CCosto</b>
+            </td>
+            <td>
+                <b>CCosto</b>
+            </td>
+            <td>
+                <b>Tarifario</b>
+            </td>
+            <td>
+                <b>Tarifario</b>
+            </td>
+            <td>
+                <b>Total</b>
+            </td>
+            <td>
+                <b>Estado</b>
+            </td>
+            <td>
+                <b>Doc</b>
+            </td>
+            <td>
+                <b>Serie</b>
+            </td>
+            <td>
+                <b>Numero</b>
+            </td>
+            <td>
+                <b>FFechaPago</b>
+            </td>            
+            <td>
+                <b>TipoDoc</b>
+            </td>  
+            <td>
+                <b>Ruc</b>
+            </td>  
+            <td>
+                <b>Enlace</b>
+            </td>
+            <td>
+                <b>Distrito notarial al que postula</b>
+            </td>
+            <td>
+                <b>FNacimiento</b>
+            </td>
+            <td>
+                <b>Sexo</b>
+            </td>
+            <td>
+                <b>Estado civil</b>
+            </td>
+        </tr>
+        <!---->
+        @foreach (DataRow row in Model.Rows)
+        {
+            <tr>
+                <td class="text">
+                    @(row["dfec_ins_reg"])
+                </td>
+                <td class="text">
+                    @(row["cnro_doc"])
+                </td>
+                <td class="text">
+                    @(row["cpaterno"])
+                </td>
+                <td class="text">
+                    @(row["cmaterno"])
+                </td>
+                <td class="text">
+                    @(row["cnombres"])
+                </td>
+                <td class="text">
+                    @(row["cdireccion"])
+                </td>
+                <td class="text">
+                    @(row["ccelular"])
+                </td>
+                <td class="text">
+                    @(row["cemail"])
+                </td>
+                <td class="text">
+                    @(row["ccod_ccosto"])
+                </td>
+                <td class="text">
+                    @(row["cdsc_ccosto"])
+                </td>
+                <td class="text">
+                    @(row["ccod_art"])
+                </td>
+                <td class="text">
+                    @(row["cdsc_art"])
+                </td>
+                <td class="text">
+                    @(row["ntotal"])
+                </td>
+                <td class="text">
+                    @(row["cdsc_pago"])
+                </td>
+                <td>
+                    @(row["cdoc"])
+                </td>
+                <td class="text">
+                    @(row["cdoc_serie"])
+                </td>
+                <td class="text">
+                    @(row["cdoc_nro"])
+                </td>               
+                <td class="text">
+                    @(row["ffec_pago"])
+                </td>
+                <td class="text">
+                    @(row["ctipo_doc"])
+                </td>
+                <td class="text">
+                    @(row["cruc"])
+                </td>
+                <td class="text">
+                    @(row["curl"])
+                </td>
+                <td class="text">
+                    @(row["cdist_nota_postula"])
+                </td>
+                <td class="text">
+                    @(row["cfecha_nacimiento"])
+                </td>
+                <td class="text">
+                    @(row["csexo"])
+                </td>
+                <td class="text">
+                    @(row["cecivil"])
+                </td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

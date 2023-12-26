@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div> 
+    </div>
+    <script>
+        //{"cstatus":"0","cmessage":"El ruc que ingreso no existe, puede validarlo desde este enlace https://e-consultaruc.sunat.gob.pe/cl-ti-itmrconsruc/jcrS00Alias, sugerimos escoja la opcion BOLETA","ruc":"","razon_social":"","direccion":""}
+        $.ajax({
+            url: "http://172.17.100.186/app/dga/ws/rest/saberruc/1040417486",
+            type: "get",
+            dataType: 'json',
+            success: function (data) {
+                alert(data.cmessage)
+            },
+            error: function (xhr, status, error) {
+                alert(xhr + '-' + status + '-' + error)
+            }
+        });
+    </script>
+</body>
+</html>

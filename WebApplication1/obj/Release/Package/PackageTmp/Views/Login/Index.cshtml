@@ -1,0 +1,161 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width" />
+    <title>Autentificacion</title>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/js/easyui/themes/gray/easyui.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/js/easyui/themes/icon.css")">
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/demo.css")">
+    <script type="text/javascript" src="@Url.Content("~/js/easyui/jquery.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/js/easyui/jquery.easyui.min.js")"></script>
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            background-image: url("@ViewBag.cimg_bg_ruta");
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+
+    <script>
+
+		$(document).ready(function() {
+			var t = $('#txtcpas_usuario');
+			t.textbox('textbox').bind('keydown', function(e){
+			   if (e.keyCode == 13){   // when press ENTER key, accept the inputed value.
+				  $("#btningresar").click();
+			   }
+			});
+		});
+
+		function ingresar(){
+
+			if ($('#frmlogin').form('validate') == false) {
+				$.messager.alert('Error','Debe de ingresar campos requeridos','error');
+				return
+			}
+
+
+			boton_login('btningresar','uno')
+
+
+
+			$.ajax({
+			    url: '@Url.Content("~/Login/Proceso")', //"/login/proceso",
+				//contentType: "application/x-www-form-urlencoded",
+				//dataType: "html",
+				type: "post",
+				data: { 'ccod_usuario' : $("#txtccod_usuario").textbox('getValue'), 'cpas_usuario' : $("#txtcpas_usuario").textbox('getValue') },
+				success:function(data){
+				    if (data.substring(0,4) == 'True') { document.location.href = '@Url.Content("~/home/index/")' + data.substring(4,200); } else { boton_login('btningresar','dos') ; $.messager.alert('Error','Verifique sus datos de acceso o consulte si cuenta con permiso para ingresar al software','error'); }
+				},
+				error:function(xhr,status,error){
+					boton_login('btningresar','dos')
+					$.messager.alert('Error','Se produjo un error, intente de nuevo','error')
+				}
+			});
+		}
+
+		function boton_login(id,cstatus){
+			//cadena = "text: '<img src = img/ajax-loader.gif align = absmiddle>',disabled:true"
+			if (cstatus == "uno") {
+				$('#' + id).linkbutton({
+				    text: '<img src = "@Url.Content("~/img/712.gif")" align = absmiddle>', disabled: true
+				});
+			} else {
+				$('#' + id).linkbutton({
+					text: 'Entrar',disabled:false
+				});
+			}
+		}
+
+
+
+
+    </script>
+
+</head>
+<body style='background-color:#F9F9F9'>
+
+
+    <div id="frmlogin" style="-webkit-box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);-moz-box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);background-color:#FFFFFF;border-radius: 5px;position:absolute;border: 0px #900634 solid;font-family:arial;font-size:11px;padding:30px;width:350px;height:450px;;top:50%;left:50%;margin-left:-215px;margin-top:-280px;">
+
+        <table cellspacing=0 cellpadding=0 width="350">
+            <tr height=70>
+                <td align=center style='background-color:@ViewBag.ccolor_fondo'>
+                    <img src="@ViewBag.cruta_logo">
+                </td>
+            </tr>
+            <tr height=20>
+                <td align=center>
+                    <br>
+                    <div style="position:relative;color:#000000;font-weight:bold;font-size:14px;">@ViewBag.cnomapp</div>
+                    <div style="position:relative;color:#000000;font-size:11px;">@ViewBag.cversion</div>
+                    <br>
+                </td>
+            </tr>
+            <!--
+            <tr height=45>
+                <td>
+                    <select id="cc" class="easyui-combobox" data-options ="editable:false,panelHeight:'auto'" style="width:100%;height:35px">                        
+                        <option value="0" selected>Autentificacion de Software</option>
+                        <option value="1">UPCH</option>
+                    </select>
+                </td>
+            </tr>
+            -->
+            <tr height=45>
+                <td>
+                    <input class="easyui-textbox" id="txtccod_usuario" style="width:100%;height:35px;padding:12px" data-options="required:true,validateOnCreate:false,validateOnBlur:true,prompt:'Usuario',iconCls:'icon-man',iconWidth:38">
+                </td>
+            </tr>
+            <tr height=45>
+                <td>
+                    <input class="easyui-textbox" id="txtcpas_usuario" type="password" style="width:100%;height:35px;padding:12px" data-options="required:true,validateOnCreate:false,validateOnBlur:true,prompt:'Contraseña',iconCls:'icon-lock',iconWidth:38">
+                </td>
+            </tr>
+            <tr height=50>
+                <td>
+                    <a id="btningresar" href="#" class="easyui-linkbutton" data-options="disabled:false" style="width:100%;height:40px" onClick="ingresar()">Entrar </a><!--<img src = "img/ajax-loader.gif" align = "absmiddle">-->
+                </td>
+            </tr>
+            <tr height=30 style="display:none">
+                <td align=right>
+                    <span style='color:blue;cursor:pointer'>Olvide mi usario o contraseña</span>
+                </td>
+            </tr>
+            <tr height=50>
+                <td>
+                    <br>
+                    Éste aplicativo esta optimizado para los navegadores que se listan a continuación, si usted no posee un navegador de estos puede que el sitio no se vea correctamente.
+                    <br><br>
+                    -Google Chrome 39 o superior.<br>
+                    -Internet Explorer 9 o superior.<br>
+                    -Firefox 35 o superior.<br>
+                    <br>
+                    Si usted posee versiones anteriores de alguno de los navegadores de la lista, puede que no funcionen correctamente.
+                </td>
+            </tr>
+
+
+
+
+        </table>
+
+    </div>
+
+
+   
+</body>
+</html>

@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="dbtarifarioModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="dbtarifarioEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="vis_data" EntityType="dbtarifarioModel.vis_data" />
+  </EntityContainer>
+  <EntityType Name="vis_data">
+    <Key>
+      <PropertyRef Name="ccod_ficha" />
+      <PropertyRef Name="cnro_doc" />
+      <PropertyRef Name="ccod_art" />
+    </Key>
+    <Property Name="cdsc_ug" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
+    <Property Name="ctipo_doc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="cruc" Type="String" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="ccod_ficha" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="dfec_ins_reg" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="dfch_crea" Type="String" MaxLength="16" FixedLength="false" Unicode="false" />
+    <Property Name="cnro_doc" Type="String" Nullable="false" MaxLength="11" FixedLength="false" Unicode="false" />
+    <Property Name="cpaterno" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="cmaterno" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+    <Property Name="cnombres" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="cdireccion" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="ccelular" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="cemail" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ccod_ccosto" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_ccosto" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+    <Property Name="ccod_art" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_art" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_pago" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+    <Property Name="cdoc" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+    <Property Name="cdoc_serie" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Name="cdoc_nro" Type="String" MaxLength="7" FixedLength="true" Unicode="false" />
+    <Property Name="curl" Type="String" MaxLength="211" FixedLength="false" Unicode="false" />
+    <Property Name="ntotal" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="nletras" Type="Int32" />
+    <Property Name="cstatus_ficha" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="ctipo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="id_lnfact" Type="Decimal" Precision="15" Scale="0" />
+    <Property Name="idpostulacion" Type="Int32" />
+    <Property Name="cdsc_convocatoria" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_carrera" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_modalidad" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+    <Property Name="coamra" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_mon" Type="String" MaxLength="7" FixedLength="false" Unicode="false" />
+    <Property Name="cdist_nota_postula" Type="String" MaxLength="70" FixedLength="false" Unicode="false" />
+    <Property Name="cfecha_nacimiento" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+    <Property Name="csexo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="cecivil" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+</Schema>

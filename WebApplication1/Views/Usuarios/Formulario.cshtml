@@ -1,0 +1,114 @@
+﻿@model DataSet
+@using System.Data;
+
+
+@{
+    Layout = null;
+    string accionsql = Request.QueryString["accionsql"];
+    string id = Request.QueryString["id"];
+    string contenedor = Request.QueryString["contenedor"];
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Formulario</title>
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="Formulario" style="width:700px;padding:0px;" fit="true">
+        <!--Marco con titulo-->
+        <div class="easyui-layout" fit="true">
+            <!--Toolbar Menu-->
+            <div region="north" border="true" style="padding:3px 5px;background:#efefef;height:35px;">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save" onClick="usuarios_grabar('@contenedor','@accionsql','@id')">Grabar y Cerrar</a>
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-cancelar" onClick="javascript: refreshPanel('@Url.Content("~/usuarios/lista")?contenedor=@contenedor')">Cancelar</a>
+                <!--<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save">Grabar y Nuevo</a>-->
+            </div>
+            <!--Toolbar Menu-->
+            <div id="@{@contenedor}formulario" region="center" border="false" style="padding:20px;background-color:#E9EAE5">
+                <span style='color:red'>Campos con (*) son requeridos</span>
+                <br>
+                <table cellspacing="0" cellpadding="0">
+                    <colgroup>
+                        <col width="100">
+                        <col width="350">
+                        <col width="80">
+                    </colgroup>
+                    <tr height="40px">
+                        <td>
+                            Tipo de ingreso <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <select id="@{@contenedor}cmbctipo_ing" data-options="required:true,validateOnCreate:false,validateOnBlur:true,prompt:'-seleccionar-',editable:false,panelHeight:'auto',value:'@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["ctipo_ing"]); } else if (accionsql == "G") { @Html.Raw("0"); }'" class="easyui-combobox @{@contenedor}formulario" style="width:200px">
+                                <option value="0">Autentificacion de Software</option>
+                                <option value="1">UPCH</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Codigo <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtccod_usuario" @if (accionsql == "E") { @Html.Raw("readonly"); } data-options="required:true,validateOnCreate:false,validateOnBlur:true" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["ccod_usuario"]); }" style="width:120px;height:25px">
+                        </td>
+                        <td rowspan=5 valign=top align=right>                           
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Descripcion <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtcdsc_usuario" data-options="required:true,validateOnCreate:false,validateOnBlur:true" class="easyui-textbox @{@contenedor}formulario" style="width:300px;height:25px" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cdsc_usuario"]); }">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Password <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtcpas_usuario" data-options="disabled:false,required:true,validateOnCreate:false,validateOnBlur:true" class="easyui-passwordbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cpas_usuario"]); }" style="width:150px;height:25px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Rol <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <select id="@{@contenedor}cmbccod_grupo" data-options="validateOnCreate:false,validateOnBlur:true,prompt:'-seleccionar-',required:true,editable:false,panelHeight:'auto',value:'@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["ccod_grupo"]); }'" class="easyui-combobox @{@contenedor}formulario" style="width:200px">
+                            @foreach (DataRow row in Model.Tables[0].Rows)
+                            {
+                                <option value='@(row["ccod_grupo"])'>@(row["cdsc_grupo"])</option>
+                            }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Correo electronico <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtcema_usuario" data-options="required:true,validType:'email',validateOnCreate:false,validateOnBlur:true" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cema_usuario"]); }" style="width:250px;height:25px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Estado <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <select id="@{@contenedor}cmbcstatus" data-options="required:true,validateOnCreate:false,validateOnBlur:true,prompt:'-seleccionar-',editable:false,panelHeight:'auto',value:'@if (accionsql == "E") { @Html.Raw(Model.Tables[1].Rows[0]["cstatus"]); }'" class="easyui-combobox @{@contenedor}formulario" style="width:105px">
+                                <option value="A">A</option>
+                                <option value="I">I</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>               
+            </div>
+        </div>
+    </div>
+</body>
+</html>

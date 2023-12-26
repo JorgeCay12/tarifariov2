@@ -1,0 +1,102 @@
+﻿@{
+    Layout = null;
+
+    string sort = "ccod_ficha";
+    string order = "desc";
+    string jsonname = @Url.Content("~/reporte_pantalla/json");
+    string pagina = @Url.Content("~/roles/formulario");
+
+    string tamano_campo = "80,60,110,110,100,100,100,200,500,100,300,100,500,80,500,100,50,80,80,1400,80,80";
+    string titulo_campo = "CodFicha,UG,FRegistro,FPago,NroDoc,Paterno,Materno,Nombres,Direccion,Celular,Email,CodCCosto,DesCCosto,CodTarifario,DesTarifario,DesPago,DocE,SerieE,NumeroE,Enlace,Moneda,Total";
+    string alineacion_campo = "Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Right";
+    string nombre_campo = "ccod_ficha,cdsc_ug,dfec_ins_reg,dfch_crea,cnro_doc,cpaterno,cmaterno,cnombres,cdireccion,ccelular,cemail,ccod_ccosto,cdsc_ccosto,ccod_art,cdsc_art,cdsc_pago,cdoc,cdoc_serie,cdoc_nro,curl,cdsc_mon,ntotal";
+
+    string[] tamano_campo_a = tamano_campo.Split(',');
+    string[] titulo_campo_a = titulo_campo.Split(',');
+    string[] alineacion_campo_a = alineacion_campo.Split(',');
+    string[] nombre_campo_a = nombre_campo.Split(',');
+
+    string contenedor = Request.QueryString["contenedor"];
+
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Lista</title>
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="Listado" style="width:700px;padding:0px;" fit="true">
+        <!--Marco con titulo-->
+        <div id="cc" class="easyui-layout" fit='true' border='false'>
+            <!--Layout - Para separar barra de menu y la grilla y ajuste con el fit esto tiene que ir-->
+            <div data-options="region:'north',border:false" style="padding:5px;height:36px">
+                <!--Seperador Parte superior-->
+                <!--barra de menu-->
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-print" onClick="javascript: var cdoc_serie; var cdoc_nro; var cdoc; var row = $('#@(contenedor)dgvlistado').datagrid('getSelected'); if (row) { cdoc_serie = row.cdoc_serie; cdoc_nro = row.cdoc_nro; cdoc = row.cdoc } else { $.messager.alert('Error', 'Debe de seleccionar una fila', 'error'); return; }; if ($.trim(cdoc) == '') { $.messager.alert('Error', 'Este registro esta como Pendiente', 'error') } else { print_view(cdoc, cdoc_serie, cdoc_nro); }">Mostrar emision</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-filter" plain="true" onclick="javascript: $('#@(contenedor)dgvlistado').datagrid('removeFilterRule').datagrid('reload');">Borrar Filtros</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-editar" plain="true" onclick="javascript:if (esta_seleccionado('@(contenedor)dgvlistado')) { var $temp = $('<input>'); $('body').append($temp); $temp.val($('#@(contenedor)dgvlistado').datagrid('getSelected').curl).select(); document.execCommand('copy'); $temp.remove();  } else { $.messager.alert('Error','Debe de seleccionar una fila','error'); }">Copiar Enlace de pago</a>
+                <!--<a id = "bgrabar" href="#" class="easyui-linkbutton" title = "Grabar" onClick = "javascript:refreshPanel('<%=pagina%>?accion=formulario&accionsql=G')" plain="true" iconCls="icon-trazabilidad">Trazabilidad</a>-->
+                <!--Fin barra de menu-->
+                <!--Filtros-->                
+                <!--Fin Filtros-->
+            </div><!--FinSeperador Parte superior-->
+            <div data-options="region:'center',border:false" style="padding:0px">
+                <!--Seperador Parte Inferior-->
+                <table id="@(contenedor)dgvlistado" class="easyui-datagrid" pageList="[50,100,200]" pagesize="100" style="" filtro="0" sortName="@{ @Html.Raw(sort); }" sortOrder="@{ @Html.Raw(order); }" data-options="rowStyler:function(index,row){if(row.cdsc_pago=='Pagante'){ return 'color:blue'} },singleSelect:true,pagination:true,fit:true,checkOnSelect:false,selectOnCheck:false,emptyMsg:'<font color=red>No hay registros para mostrar</font>'">
+                    <thead>
+                        <tr>
+                            <!--<th data-options="field:'ck',checkbox:true"></th>-->
+                            @{
+                                for (int i = 0; i < tamano_campo_a.Length; i++)
+                                {
+                                    if (nombre_campo_a[i] == "ntotal")
+                                    {
+                                        @Html.Raw("<th formatter='formatPrice' data-options=\"align:\'" + alineacion_campo_a[i] + "\',sortable:true,field:\'" + nombre_campo_a[i] + "\',width:" + tamano_campo_a[i] + "\">" + titulo_campo_a[i] + "</th>");
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("<th data-options=\"align:\'" + alineacion_campo_a[i] + "\',sortable:true,field:\'" + nombre_campo_a[i] + "\',width:" + tamano_campo_a[i] + "\">" + titulo_campo_a[i] + "</th>");
+                                    }
+                                }
+                            }
+                        </tr>
+                    </thead>                    
+                </table>
+            </div><!--Fin Seperador Parte Inferior-->
+        </div>	<!--Fin Layout-->
+    </div><!--Fin Marco con titulo-->
+    <script>
+        function formatPrice(val, row) {
+            return val.toFixed(2)//.slice(0, -1);
+        }
+    </script>
+    <!--
+    <script>
+		$(function(){
+		    var dg = $('#@(contenedor)dgvlistado').datagrid({
+		        //url: '@{ @Html.Raw(jsonname); }?filtro=0', method: 'get',
+		        url: '@Html.Raw(jsonname)'
+                ,method:'get'
+				,filterBtnIconCls:'icon-filter'
+				,pagination:true
+				,remoteFilter:true
+				,clientPaging:false
+				,filterDelay:500
+			}).datagrid('enableFilter', [{
+				field:'cnro_doc',
+				type: 'textbox'
+			},{
+				field:'ccod_ccosto',
+				type: 'textbox'
+			},{
+				field:'ccod_art',
+				type: 'textbox'
+			}]);
+		});
+        alert();
+    </script>
+    -->
+</body>
+</html>

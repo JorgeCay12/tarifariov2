@@ -1,0 +1,912 @@
+﻿@using System.Data
+@model DataSet
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8">
+    <title>Ficha de pago</title>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.4.0/bootbox.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment-with-locales.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+
+
+
+    <style>
+        label {
+            font-weight: normal !important;
+        }
+
+        .no-border {
+            border: 0;
+            box-shadow: none; /* You may want to include this as bootstrap applies these styles too */
+            background: transparent !important;
+        }
+    </style>
+
+    <script>
+
+
+        function validarEmail(valor) {
+            if (/^(([^<>()[\]\.,;:\s@@\"]+(\.[^<>()[\]\.,;:\s@@\"]+)*)|(\".+\"))@@(([^<>()[\]\.,;:\s@@\"]+\.)+[^<>()[\]\.,;:\s@@\"]{2,})$/i.test(valor)) {
+                //alert("La dirección de email " + valor + " es correcta!.");
+                return true;
+            } else {
+                //alert("La dirección de email es incorrecta!.");
+                return false;
+            }
+        }
+
+        function fllevar(valor) {
+            if (valor == "") {
+                $('.cllevar').prop('disabled', true);
+                $('.cllevar').prop('checked', false);
+            } else if (valor == "894314" || valor == "894315" || valor == "894322" || valor == "894321") {
+                $('.cllevar').prop('disabled', true);
+                $('.cllevar').prop('checked', true);
+            } else {
+                $('.cllevar').prop('disabled', false);
+                $('.cllevar').prop('checked', false);
+            }
+        }
+        /*Medicos*/
+        function medicos(valor) {
+            //alert(valor)
+            $('.cllevar').prop('disabled', true);
+            $('.cllevar').prop('checked', false);
+            var options = $("#cmbcdsc_medico"); //Borro busqueda de medicos
+            options.empty();
+            $("#cmbcdsc_medico").empty(); //Borro busqueda de horarios
+            $('#txtntotal').val('0.00');
+            if (valor == "MGE") {
+                options.append(new Option("-Seleccionar-", ''));
+                options.append(new Option("DR PEDRO CACERES", '{"ccod_art":"par001771","nmonto":"60.00","cnro_doc":"12345678"}'));
+                options.append(new Option("DR MIGUEL CERVANTES", '{"ccod_art":"par001771","nmonto":"80.00","cnro_doc":"87654321"}'));
+            } else if (valor == "NEF") {
+                options.append(new Option("-Seleccionar-", ''));
+                options.append(new Option("DRA JESSICA MANOSALVA", '{"ccod_art":"par001771","nmonto":"50.00","cnro_doc":"12345678"}'));
+                options.append(new Option("DRA PATRICIA MENDOZA", '{"ccod_art":"par001771","nmonto":"90.00","cnro_doc":"87654321"}'));
+            } else if (valor == "NEU") {
+                options.append(new Option("-Seleccionar-", ''));
+                options.append(new Option("DR JOSE PEREZ", '{"ccod_art":"par001771","nmonto":"60.00","cnro_doc":"12345678"}'));
+                options.append(new Option("DR EDUARDO MARTINEZ", '{"ccod_art":"par001771","nmonto":"70.00","cnro_doc":"87654321"}'));
+                options.append(new Option("DR PRUEBA", '{"ccod_art":"par001771","nmonto":"1.00","cnro_doc":"87654321"}'));
+            }
+        }
+
+        function horarios(valor) {
+
+            //alert(valor)
+            val = $.parseJSON($("#cmbcdsc_medico option:selected").val())
+            cnro_doc = val.cnro_doc
+            $('#txtntotal').val(val.nmonto);
+            //alert(val.cnro_doc)
+            $('.cllevar').prop('disabled', true);
+            $('.cllevar').prop('checked', false);
+            var options = $("#cmbcdsc_horario");
+            options.empty();
+            if (cnro_doc == "12345678") {
+                options.append(new Option("-Seleccionar-", ''));
+                options.append(new Option("Lunes 08 - 08:00-11:00", "Lunes 15 - 08:00-11:00"));
+                options.append(new Option("Miercoles 10 - 09:00-12:00", "Miercoles 17 - 09:00-12:00"));
+            } else if (cnro_doc == "87654321") {
+                options.append(new Option("-Seleccionar-", ''));
+                options.append(new Option("Lunes 08 - 08:00-11:00", "Lunes 15 - 08:00-11:00"));
+                options.append(new Option("Miercoles 10 - 09:00-12:00", "Miercoles 17 - 09:00-12:00"));
+            }
+        }
+
+
+
+        function boton_login(id, cstatus) {
+            if (cstatus == "uno") {
+                $('#' + id).html(
+                    '<img src="@Url.Content("~/img/spinner4.gif")"> CARGANDO...'
+                ).attr('disabled', 'disabled');
+            } else {
+                $('#' + id).html(
+                    'PAGAR'
+                ).removeAttr('disabled');
+            }
+        }
+
+        function mcampo(str) {
+            //var str = "Hello world, welcome to the universe.";
+            //var n = str.indexOf("welcome");
+
+            //alert(str)
+
+            position = -1
+            if (str.indexOf("txt") > -1) {
+                position = str.indexOf("txt")
+                str = str.substring(position + 3, 100)
+            }
+
+            if (str.indexOf("cmb") > -1) {
+                position = str.indexOf("cmb")
+                str = str.substring(position + 3, 100)
+            }
+
+            if (str.indexOf("chk") > -1) {
+                position = str.indexOf("chk")
+                str = str.substring(position + 3, 100)
+            }
+
+            //alert(str)
+
+            //if (position == -1) {alert('Se encontro un id sin la terminologia adecuada : '  + str)}
+
+            return str
+        }
+
+        function especiales(str) { // Reemplaza todos los caracteres especiales ajax (+,&) | sql server (') | xml (<,>)
+            str = str.replace(/&/g, "&#38;").replace(/</g, "&#60;").replace(/>/g, "&#62;").replace(/\+/g, "&#43;").replace(/"/g, "''"); //.replace(/°/g, "&#176;")
+            return str
+        }
+
+        function calcular_monto(valor) {
+            if (valor == "") {
+                $('#txtntotal').val('0.00')
+            } else {
+                val = $.parseJSON(valor)
+                $('#txtntotal').val(val.nmonto_precio)
+            }
+        }
+
+        function validar_ruc(cruc) {
+            //alert(cruc)
+            var result;
+            $.ajax({
+                url: "https://dga2.upch.edu.pe/app/dga/ws/rest/saberruc/" + cruc,
+                type: "get",
+                dataType: 'json',
+                async: false,
+                success: function (data) {
+                    //alert(data)
+                    result = data
+                }
+            });
+            //console.log(result)
+            return result;
+            
+        }        
+
+
+
+
+        $(document).ready(function () {
+
+
+            @Html.Raw(@ViewBag.mostrar)
+
+
+            $('#btntest').on('click', function (event) {
+                $('#cmbcdoc').val('01')
+                $('#txtcnro_doc').val('40417486')
+                $('#txtcpaterno').val('Callupe')
+                $('#txtcmaterno').val('Cervantes')
+                $('#txtcnombres').val('Carlos Agusto')
+                $('#txtfnacimiento').val('19/09/1979')
+                $('#cmbcsexo').val('M')
+                $('#txtcemail').val('xcarlosperu@hotmail.com')
+                $('#cmbcestadocivil').val('S')
+                $('#txtcdireccion').val('Av. Mendiburo 1260 -D- Santa Cruz Miraflores')
+                $('#txtccelular').val('997699771')
+            })
+
+
+
+            $('#btnsave').on('click', function (event) {
+
+                if ($("#chklei_tc").is(":checked") == false) {
+                    bootbox.alert({
+                        title: "<b>Mensaje</b>",
+                        message: "No se puede grabar su registro sino acepta los terminos y condiciones"
+                    });
+                    return false
+                };
+
+                if (validarEmail($.trim($("#txtcemail").val())) == false) {
+                    bootbox.alert({
+                        title: "<b>Mensaje de error</b>",
+                        message: "Verifique que su correo electronico sea correcto",
+                        callback: function () { $("#txtcema_cliente").focus(); }
+                    });
+                    return false
+                };
+                var estado;
+
+                var isvalidate = $("#myForm")[0].checkValidity();
+                if (isvalidate) {
+                    event.preventDefault();                                                            
+
+                    /*Reglas de negocio*/
+                    var ntotal = parseFloat($("#txtntotal").val()) || 0
+                    if (ntotal <= 0) {
+                        //alert("El valor de la compra debe ser mayor a 0")
+                        bootbox.alert("El valor del pago debe ser mayor a 0");
+                        return
+                    }
+
+
+                    /*Valida si el ruc es correcto*/
+                    /*
+                    if ($('#cmbctipo_doc').val() == "F") {
+                        //alert(validar_ruc($('#txtcruc').val()))                        
+                        if (validar_ruc($('#txtcruc').val()).cstatus == "0") {
+                            bootbox.alert({
+                                title: "<b>Mensaje</b>",
+                                message: validar_ruc($('#txtcruc').val()).cmessage
+                            });
+                            return
+                        };                        
+                    }
+                    */
+                    //alert("a")
+                    //return
+                    /******************************/                   
+
+                    var ctpago = $("input[name='defaultExampleRadios']:checked").val() //valor de lo seleccionado ALIGNET o SAFETYPAY
+
+                    /*Valores en json de lo seleccionado*/
+                    val = $.parseJSON($("#cmbccod_art").val())
+                    var ccod_art = val.ccod_art
+                    var ntot = val.nmonto_precio
+                    var cdsc_art = $("#cmbccod_art option:selected").text()
+                    var cmon_precio = val.cmon_precio
+                    var cdestino = (val.cmon_precio == "01" ? "0" : "1") //destino de la pasarela
+                    /***************************************/
+
+                    //@@if (ViewBag.accion == "") { //si es nuevo
+                    //<text>
+                    var xml
+                    xml = ""
+                    xml += "<root>"
+                    xml += "<cabecera>"
+                    var str = '';
+                    var elem = document.getElementsByName("registro")
+
+                    for (var i = 0; i < elem.length; i++) {
+                        if (elem[i].id != "") {
+                            if (elem[i].value == undefined) { continue }
+                            xml += "<" + mcampo(elem[i].id) + ">" + (elem[i].type === "checkbox" ? elem[i].checked : $.trim(especiales(elem[i].value))) + "</" + mcampo(elem[i].id) + ">"
+                        }
+                    }
+                    xml += "<ccod_art>" + ccod_art + "</ccod_art>"
+                    xml += "<cdsc_art>" + cdsc_art + "</cdsc_art>"
+                    xml += "<ccod_mon>" + cmon_precio + "</ccod_mon>"
+                    xml += "<ccod_ccosto>" + $('#txtccod_ccosto').val() + "</ccod_ccosto>"
+                    xml += "<cdsc_ccosto>" + $('#txtcdsc_ccosto').val() + "</cdsc_ccosto>"
+                    xml += "<ctipo>" + $('#txtctipo').val() + "</ctipo>"
+                    xml += "</cabecera>"
+                    xml += "</root>"
+                    //</text>
+                    /*
+                    }
+                    else if (ViewBag.accion == "detalle") //si es detalle
+                    {
+                    <text>
+                    var xml
+                    xml = ""
+                    xml += "<root>"
+                    xml += "<cabecera>"
+                    xml += "<ctipo_doc>" + $("#cmbctipo_doc option:selected").val() + "</ctipo_doc>"
+                    xml += "<cruc>" + $("#txtcruc").val() + "</cruc>"
+                    xml += "<cruc_mail>" + $("#txtcruc_mail").val() + "</cruc_mail>"
+                    xml += "<cruc_razonsocial>" + especiales($("#txtcruc_razonsocial").val()) + "</cruc_razonsocial>"
+                    xml += "<cruc_direccion>" + $("#txtcruc_direccion").val() + "</cruc_direccion>"
+                    xml += "</cabecera>"
+                    xml += "</root>"
+                    </text>
+                    }
+                    */
+                    boton_login('btnsave', 'uno')
+
+                    $.ajax({
+                        //@@if (ViewBag.accion == "") {
+                        //<text>
+                        url: '@Url.Content("~/Register/process")',
+                        //</text>
+                        //}
+                        //else if (ViewBag.accion == "detalle")
+                        //{
+                        //<text>url: '@@Url.Content("~/Register/UpdateProcess")',</text>
+                        //}
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        type: "post",
+                        //@@if (ViewBag.accion == "") {
+                        //<text>
+                        data: { 'xml': escape(xml) },
+                        //</text>
+                        //}
+                        //else if (ViewBag.accion == "detalle")
+                        //{
+                        //<text> data: { 'xml': escape(xml), 'ccod_ficha': '@@Model.Tables[0].Rows[0]["ccod_ficha"].ToString()' },</text>
+                        //}
+                        success: function (data) {
+                            //alert(data)
+                            if (data.substring(0, 1) == "1") {
+                                $('#txtccod_ficha').val(data.substring(1, 11))
+                                $("#mensaje").show();
+                                mensaje = "";
+                                //alert(ctpago)
+                                if (ctpago == "2") {
+                                    $(".rdb,.chk,.txt,.cmb").prop("disabled", true); // disable
+                                    $("#btnsave").hide();
+                                    bootbox.alert({
+                                        title: "<b>Felicitaciones</b>",
+                                        message: "<p align='center'><img src='@Url.Content("~/img/check.png")'><br>Sus datos fueron registrados satisfactoriamente<br><br><strong>Recuerde que para finalizar el proceso, debe de cancelar su matricula.</strong><br><br>En estos momento recibirá un correo de confirmacion de registro, en el mensaje se adjunta un enlace donde podra cancelar su matricula con tarjeta de credito/debito o pagar desde agentes, ventanillas de bancos o banca movil</p>"
+                                    });
+                                } else {
+                                    $(".chk,.txt,.cmb").prop("disabled", true); // disable
+                                    bootbox.confirm({
+                                        message: mensaje = "<p align='center'><img src='@Url.Content("~/img/check.png")'><br>Sus datos fueron registrados satisfactoriamente<br><br><strong>Recuerde que para finalizar el proceso, debe de cancelar el concepto seleccionado.</strong><br><br>En estos momento recibirá un correo de confirmacion de registro, en el mensaje se adjunta un enlace donde podra cancelar el concepto seleccionado con tarjeta de credito/debito o pagar desde agentes, ventanillas de bancos o banca movil</strong><br><br>¿Desea ser redirigido a la opcion de pago que selecciono?</p>",
+                                        buttons: {
+                                            cancel: {
+                                                label: '&nbsp;&nbsp;&nbsp;NO&nbsp;&nbsp;&nbsp;'
+                                                        , className: 'btn-danger'
+                                            },
+                                            confirm: {
+                                                label: '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-ok"></i>&nbsp;SI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+                                                , className: 'btn-success'
+                                            }
+                                        },
+                                        callback: function (result) {
+                                            if (result == true) {
+
+                                                boton_login('btnsave', 'uno')
+                                                xml = '';
+                                                xml += '<root>';
+                                                xml += '<cabecera>';
+                                                xml += '<cficha>S</cficha>'; //aqui aqui en produccion
+                                                xml += '<ctipo_doc>' + $('#cmbctipo_doc').val() + '</ctipo_doc>'; //Tipo de documento //Boleta o Factura
+                                                xml += '<ccod_mon_pago>' + cmon_precio + '</ccod_mon_pago>';
+                                                xml += '<ctip_pago>' + (ctpago === "0" ? "ALI" : "SAF") + '</ctip_pago>';
+                                                xml += '<corigen>F</corigen>';
+                                                xml += '<cdoc>' + $('#cmbcdoc').val() + '</cdoc>'; //Documento del cliente
+                                                xml += '<ccod_coa>' + $('#txtcnro_doc').val() + '</ccod_coa>';
+                                                xml += '<ccod_mon>' + cmon_precio + '</ccod_mon>';
+                                                xml += '<nimp_t>' + ntot + '</nimp_t>';
+                                                xml += '<cruc>' + $('#txtcruc').val() + '</cruc>';
+                                                xml += '<crazon_social>' + $.trim(especiales($('#txtcruc_razonsocial').val())) + '</crazon_social>';
+                                                xml += '<cdireccion>' + $.trim(especiales($('#txtcruc_direccion').val())) + '</cdireccion>'; //cdireccion ruc
+                                                xml += '<cdireccion_cli>' + $.trim(especiales($('#txtcdireccion').val())) + '</cdireccion_cli>'; //cdireccion cliente
+                                                xml += '<cmail1>' + $('#txtcruc_mail').val() + '</cmail1>'; //email ruc
+                                                xml += '<cemail1>' + $('#txtcemail').val() + '</cemail1>'; //email cliente
+                                                xml += '<capepat>' + $.trim(especiales($('#txtcpaterno').val())) + '</capepat>';
+                                                xml += '<capemat>' + $.trim(especiales($('#txtcmaterno').val())) + '</capemat>';
+                                                xml += '<ccod_ficha>' + $('#txtccod_ficha').val() + '</ccod_ficha>';
+                                                xml += '<cpago>T</cpago>';
+                                                xml += '<cnom>' + $.trim(especiales($('#txtcnombres').val())) + '</cnom>';
+                                                xml += '<cdestino>' + cdestino + '</cdestino>'; //al grabar la preliquidacion le asigna los 3 primeros digitos dependiendo de la moneda 0=soles(514)/1dolares(353)
+                                                xml += '<ctelef2>' + $('#txtccelular').val() + '</ctelef2>';
+                                                xml += '<cdsc_ficha>' + 'TARIFARIO' + '</cdsc_ficha>';
+                                                xml += '</cabecera>';
+
+                                                xml += '<detalle>'
+                                                xml += '<ccod_art>' + ccod_art + '</ccod_art>'
+                                                xml += '<nimp_t>' + ntot + '</nimp_t>'
+                                                xml += '<nimp_u>' + ntot + '</nimp_u>'
+                                                xml += '<nund>1</nund>'
+                                                xml += '</detalle>'
+                                                ////////////////////////////////////////
+
+                                                xml += '</root>';
+
+                                                $.ajax({
+                                                    url: '@Url.Content("~/Register/SavePreLiquidacion")',
+                                                    type: "post",
+                                                    data: { 'xml': escape(xml) },
+                                                    success: function (data) {
+                                                        if (data.substring(0, 2) == 'ok') {
+
+                                                            $('#txtccodigo').val(data.substring(2, 12)) //Codigodepreliquidacion
+                                                            $('#txtnropedido').val(data.substring(12, 24))
+                                                            $('#txtccorreo').val($('#txtcemail').val())
+                                                            $('#txtcdirec').val($('#txtcdireccion').val())
+                                                            $('#txtcnom').val($('#txtcnombres').val())
+                                                            $('#txtpat').val($('#txtcpaterno').val())
+                                                            $('#txtmat').val($('#txtcmaterno').val())
+                                                            $('#txtreserved1').val($('#txtcnro_doc').val())
+                                                            $('#txtntot').val($('#txtntotal').val())
+                                                            $('#txtcdestino').val(cdestino)
+
+                                                            if (ctpago == "0") {
+                                                                $("#myForm").attr('action', 'https://dga2.upch.edu.pe/app/alignet/wallet_vpos2.aspx');
+                                                            } else {
+                                                                $("#myForm").attr('action', "@Url.Action("index", "sppaymentredirect")");
+                                                            }
+                                                            $("#myForm").submit();
+
+                                                        } else {
+                                                            alert("Error:\n\nSe produjo un error, por favor intente otra vez\n" + data.substring(2, 500))
+                                                            boton_login('btnsave', 'dos')
+                                                        }
+                                                    },
+                                                    error: function (xhr, status, error) {
+                                                        alert("Error:\n\nSe produjo un error, por favor intente otra vez")
+                                                        boton_login('btnsave', 'dos')
+                                                    }
+                                                })
+                                                //////////////////////////////////////////////////////////////////////////////////////////
+                                            } else {
+                                                $(".rdb").prop("disabled", true); // disable
+                                                $("#btnsave").hide();
+                                            }
+                                        }
+                                    });
+                                }
+
+                                boton_login('btnsave', 'dos')
+                            } else if (data.substring(0, 1) == "0" && data.indexOf("Infracción de la restricción PRIMARY KEY 'PK_pct_registro'") > 0) {
+                                bootbox.alert({
+                                    title: "<b>Ya se encuentra registrado en este curso</b>",
+                                    message: "No se pudo grabar el registro porque su numero de documento " + $('#txtcnro_doc').val() + " ya se encuentra registrado en este curso " + $("#cmbccod_curso option:selected").text() + "<br>Al correo que registro, le llego un enlace donde puede proceder a cancelar el curso, sino le llego el correo escribir al siguiente mail:<br><b>lizbet.anampa@upch.pe</b>"
+                                });
+                                $('#btnsave').html('REGISTRARME').removeAttr('disabled');
+                            } else {
+                                bootbox.alert({
+                                    title: "<b>Error al registrarse</b>",
+                                    message: "" + data.substring(1, 500) + ""
+                                });
+                                $('#btnsave').html('REGISTRARME').removeAttr('disabled');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert("Error:\n\nSe produjo un error, por favor intente otra vez")
+                            boton_login('btnsave', 'dos')
+                        }
+                    })
+                    //alert("aqui")
+
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .wrapper {
+            display: flex;
+            margin: 0px 0;
+        }
+    </style>
+
+</head>
+<body style="margin: 0;padding: 10px;overflow-x: hidden;">
+    <form id="myForm" role="form" data-toggle="validator" action="" method="post">
+        <div id="content">
+            <div id="mensaje" class="alert alert-success text-center" role="alert" style="display:none;">
+                <!--<i class="glyphicon glyphicon-ok"></i>--> Sus datos fueron grabados con exito
+            </div>
+            <div style="padding:20px;max-width:900px;margin: 0 auto;margin-top:20px;margin-bottom:50px;background-color:#FFFFFF;-webkit-box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);-moz-box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);box-shadow: 2px 0px 51px -11px rgba(107,107,107,0.71);">
+                <!--
+                <div class="alert alert-info">
+                    <strong>Bienvenido a la PRECAYETANO,  registre sus datos y realice su  inversión en el formulario disponible en este enlace</strong>
+                </div>
+                -->
+                
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12" style="margin:0px; padding:10px" align="center">
+                        <img src="@Url.Content("~/img/logo_upch.png")" class="img-responsive">
+                    </div>
+                </div>  
+                
+                <div class="alert alert-info" align="center">
+                    <strong>
+                        <b>@Model.Tables[0].Rows[0]["ctitulo"]</b>
+                    </strong>
+                </div>    
+                <div class="row" style="padding: 0px 10px 10px 10px">
+                    <div class="col-lg-12">
+                        <font style="font-size:14px;">                            
+                            <b>REGISTRE DATOS PERSONALES</b>
+                        </font>
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 30px 0px 30px">
+                    <div class="col-sm-12" style="text-align:center;">
+                        <input type="hidden" id="txtctipo" class="form-control" value="@Model.Tables[0].Rows[0]["ctipo"]" readonly>
+                        <input type="hidden" id="txtccod_ccosto" class="form-control" value="@Model.Tables[0].Rows[0]["ccod_ccosto"]" readonly>
+                        <input type="hidden" id="txtcdsc_ccosto" class="form-control" value="@Model.Tables[0].Rows[0]["cdsc_ccosto"]" readonly>
+                        <input type="hidden" id="txtccodigo" class="form-control" value="" readonly name="ccodigo">
+                        <input type="hidden" id="txtnropedido" class="form-control" value="" readonly name="numoperation">
+                        <input type="hidden" id="txtccod_ficha" class="form-control" value="" readonly name="cod_ficha">
+                        <input type="hidden" id="txtccorreo" class="form-control" value="" readonly name="cemail">
+                        <input type="hidden" id="txtcdirec" class="form-control" value="" readonly name="cdireccion_cli">
+                        <input type="hidden" id="txtcnom" class="form-control" value="" readonly name="cnom">
+                        <input type="hidden" id="txtpat" class="form-control" value="" readonly name="capepat">
+                        <input type="hidden" id="txtmat" class="form-control" value="" readonly name="capemat">
+                        <input type="hidden" id="txtccodart" class="form-control" value="" readonly name="reserved2"><!--No importante-->
+                        <input type="hidden" id="txtcdscart" class="form-control" value="" readonly name="reserved3"><!--No importante-->
+                        <input type="hidden" id="txtcdestino" class="form-control" value="" readonly name="cdestino"><!--pasarele 0=soles(514)(español)/1=dolares(353)(ingles)-->
+                        <input type="hidden" id="txtntot" class="form-control" value="" readonly name="ntotal">
+                        <input type="hidden" id="txtreserved1" value="HOPE" readonly name="reserved1"><!--qui va el dni, pero no es campo requerido por alignet-->
+                        <input type="hidden" id="" value="Perú" readonly name="country"><!--Super importante, siempre tiene que estar lleno este campo-->
+                        <input type="hidden" id="txtreserved2" value="" name="reserved4"><!--Institucion-->
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-3">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="cmbcdoc" class="control-label">Tipo de documento</label> <span style='color:red'> *</span>
+                            <select id="cmbcdoc" name="registro" title="X,Document type" class="form-control  form-control-sm cmb" onchange="javascript: $('#txtcnro_doc').val('');" required data-error="Ingrese campo requerido">
+                                <option value="">-Seleccionar-</option>
+                                <option value="01">DNI</option>
+                                <option value="04">CARNET DE EXTRANJERIA</option>
+                                <option value="07">PASAPORTE</option>
+                                <option value="00">OTROS DOCUMENTOS</option>
+                            </select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcnro_doc" class="control-label">Número de documento</label> <span style='color:red'> *</span>
+                            <input id="txtcnro_doc" class="form-control form-control-sm txt" placeholder="Número de documento" maxlength="11" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcpaterno" class="control-label">Apellido paterno</label> <span style='color:red'> *</span>
+                            <input id="txtcpaterno" class="form-control form-control-sm txt" placeholder="Apellido paterno" maxlength="30" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcmaterno" class="control-label">Apellido materno</label> <span style='color:red'> *</span>
+                            <input id="txtcmaterno" class="form-control form-control-sm txt" placeholder="Apellido materno" maxlength="30" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-4">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcnombres" class="control-label">Nombres</label> <span style='color:red'> *</span>
+                            <input id="txtcnombres" class="form-control form-control-sm txt" placeholder="Nombres" maxlength="50" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcdireccion" class="control-label">Dirección</label> <span style='color:red'> *</span>
+                            <input id="txtcdireccion" class="form-control form-control-sm txt" placeholder="Dirección" maxlength="150" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-6">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtccelular" class="control-label">Celular</label> <span style='color:red'> *</span>
+                            <input id="txtccelular" type="number" class="form-control form-control-sm txt" style="" placeholder="Celular" maxlength="20" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtcemail" class="control-label">E-mail</label> <span style='color:red'> *</span>
+                            <input id="txtcemail" class="form-control form-control-sm txt" type="email" style="" placeholder="E-mail" maxlength="50" name="registro" value="" required data-error="Ingrese campo requerido">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.Tables[0].Rows[0]["ctipo"].ToString() == "3" && Model.Tables[0].Rows[0]["ccod_art"].ToString().Trim() == "PAQ202234") {
+                    <div class="row" style="padding: 0px 10px 0px 10px">
+                        <div class="col-lg-12">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label for="txtcdist_nota_postula" class="control-label">Distrito notarial al que postula</label> <span style='color:red'> *</span>
+                                <input id="txtcdist_nota_postula" type="text" class="form-control form-control-sm txt" style="" placeholder="Distrito notarial al que postula" maxlength="70" name="registro" value="" required data-error="Ingrese campo requerido">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 0px 10px 0px 10px">
+                        <div class="col-lg-4">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label for="txtdfecha_nacimiento" class="control-label">Fecha de nacimiento</label> <span style='color:red'> *</span>
+                                <input id="txtdfecha_nacimiento" type="date" class="form-control form-control-sm txt" style="" placeholder="" maxlength="70" name="registro" value="" required data-error="Ingrese campo requerido">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label for="cmbcsexo" class="control-label">Sexo</label> <span style='color:red'> *</span>
+                                <select id="cmbcsexo" name="registro" title="X,Document type" class="form-control  form-control-sm cmb" required data-error="Ingrese campo requerido">
+                                    <option value="">-Seleccionar-</option>
+                                    <option value="M">MASCULINO</option>
+                                    <option value="F">FEMENINO</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label for="cmbcecivil" class="control-label">Estado civil</label> <span style='color:red'> *</span>
+                                <select id="cmbcecivil" name="registro" title="X,Document type" class="form-control  form-control-sm cmb" required data-error="Ingrese campo requerido">
+                                    <option value="">-Seleccionar-</option>
+                                    <option value="C">CASADO</option>
+                                    <option value="D">DIVORCIADO</option>
+                                    <option value="S">SOLTERO</option>
+                                    <option value="V">VIUDO</option>
+                                    <option value="O">OTROS</option>
+                                </select>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12">
+                        <div style="height:20px"></div>
+                        <font style="font-size:14px;"><b>SELECCIONE FORMA DE PAGO</b></font>
+                        <div style="height:10px"></div>
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="cmbccod_art" class="control-label">Forma de pago</label> <span style='color:red'> *</span>
+                            <select id="cmbccod_art" title="X,Document type" class="form-control  form-control-sm cmb" onchange="calcular_monto(this.value)" required data-error="Ingrese campo requerido">
+                                <option value="" selected>-Seleccionar-</option>                                		
+                                @foreach (DataRow row in Model.Tables[0].Rows)
+                                {
+                                    <option value='{"ccod_art":"@row["ccod_art"]","cmon_precio":"@row["cmon_precio"]","nmonto_precio":"@row["nmonto_precio"]"}'>@row["cdsc_art"]</option>
+                                }
+                            </select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding: 20px 10px 0px 10px">
+                    <div class="col-lg-6">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="txtntotal" class="control-label">Total a pagar</label> <span style='color:red'> *</span>
+                            <input id="txtntotal" disabled name="registro" type="number" class="form-control form-control-sm" style="text-align: right" placeholder="Cantidad de productos" maxlength="10" value=0.00 required data-error="Ingrese campo requerido"><!--150.00-->
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div style="height:7px"></div>
+                        <div class="form-group">
+                            <label for="cmbctipo_doc" class="control-label">Tipo de emision</label> <span style='color:red'> *</span>
+                            <select id="cmbctipo_doc" name="registro" title="X,Document type" class="form-control  form-control-sm cmb" onchange="javascript: solo_factura(this.value)" required data-error="Ingrese campo requerido">
+                                <option value="" selected>-Seleccionar-</option>
+                                <option value="B">Boleta</option>
+                                @if (ViewBag.cfactura == "S")
+                                {
+                                    <option value="F">Factura</option>
+                                }
+                            </select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <!--Si es factura-->
+                <script>
+                    function solo_factura(valor) {
+                        if (valor == "F") {
+                            $('#divfactura').css('display', 'inline');
+                            $("#txtcruc").prop("required", true);
+                            $("#txtcruc_mail").prop("required", true);
+                            $("#txtcruc_razonsocial").prop("required", true);
+                            $("#txtcruc_direccion").prop("required", true);
+
+                        } else {
+                            $('#divfactura').css('display', 'none');
+                            $('#txtcruc').prop('required', false).val('').closest('div').removeClass('has-error has-danger');
+                            $('#txtcruc').next().html('')
+                            $('#txtcruc_mail').prop('required', false).val('').closest('div').removeClass('has-error has-danger');
+                            $('#txtcruc_mail').next().html('')
+                            $('#txtcruc_razonsocial').prop('required', false).val('').closest('div').removeClass('has-error has-danger');
+                            $('#txtcruc_razonsocial').next().html('')
+                            $('#txtcruc_direccion').prop('required', false).val('').closest('div').removeClass('has-error has-danger');
+                            $('#txtcruc_direccion').next().html('')
+                        }
+                        $("#myForm").validator('update');
+                    }
+                </script>
+                <div id="divfactura" style="display:none">
+                    <div class="alert alert-danger">
+                        <strong>
+                            Recordar que si desea una factura:<br><br>
+                            Si su de ruc empieza con 20 debe de cancelarla con una tarjeta empresarial a nombre de la empresa<br>
+                            Si su ruc empieza con 10 lo debe cancelar con una tarjeta que este a nombre del titular del ruc<br>
+                            El no cumplir con esta disposicion puede invalidar su abono
+                        </strong>
+                    </div> 
+                    <div class="row" style="padding: 0px 10px 0px 10px">
+                        <div class="col-sm-6">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtcruc">RUC</label> <span style='color:red'> *</span>
+                                <input id="txtcruc" type="number" data-minlength="11" class="form-control form-control-sm txt" onKeyPress="if(this.value.length==11) return false;" value="" name="registro" data-error="Ingrese campo requerido (11 digitos)"> <!--cruc-->
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtcmail1">RUC E-MAIL</label> <span style='color:red'> *</span>
+                                <input id="txtcruc_mail" class="form-control form-control-sm txt" value="" maxlength="50" name="registro" data-error="Ingrese campo requerido"> <!--cemail1-->
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 0px 10px 0px 10px">
+                        <div class="col-sm-12">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtcrazon_social">RUC RAZÓN SOCIAL</label> <span style='color:red'> *</span>
+                                <input id="txtcruc_razonsocial" class="form-control form-control-sm txt" value="" maxlength="80" name="registro" data-error="Ingrese campo requerido"> <!--crazon_social-->
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="padding: 0px 10px 0px 10px">
+                        <div class="col-sm-12">
+                            <div style="height:7px"></div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtcdireccion">RUC DIRECCIÓN</label> <span style='color:red'> *</span>
+                                <input id="txtcruc_direccion" class="form-control form-control-sm txt" value="" maxlength="100" name="registro" data-error="Ingrese campo requerido"> <!--cdireccion_ruc-->
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12">
+                        <div style="height:20px"></div>
+                        <font style="font-size:14px;"><b>ESCOJA SU OPCIÓN DE PAGO</b></font>
+                        <div style="height:20px"></div>
+                    </div>
+                </div>
+                <div class="alert alert-info">
+                    <strong>
+                        <b>Si desea cancelar desde este formulario, solo escoja la opción de pago de su preferencia. Recuerde que recibirá un enlace a su correo electrónico donde podrá realizar el pago del concepto seleccionado, sin necesidad de registrar sus datos otra vez.</b>
+                    </strong>
+                </div>
+                <!--
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12" style="margin:0px; padding:10px;">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" style="float: left;" class="custom-control-input rdb" id="defaultUnchecked2" name="defaultExampleRadios" value="2" checked>
+                            <label style="margin-left: 20px;display: block;" class="custom-control-label" for="defaultUnchecked2"> SOLO DESEO REGISTRARME</label>
+                        </div>
+                    </div>
+                </div>
+                -->
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12" style="margin:0px; padding:10px;">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" style="float: left;" class="custom-control-input rdb" id="defaultUnchecked0" name="defaultExampleRadios" value="0" checked>
+                            <label style="margin-left: 20px;display: block;" class="custom-control-label" for="defaultUnchecked0"> DESEO CANCELAR CON TARJETA CRÉDITO/DÉBITO</label>
+                        </div>
+                        <img src="@Url.Content("~/img/797177.jpg")" class="img-responsive">
+                    </div>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12" style="margin:0px; padding:10px;">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" style="float: left;" class="custom-control-input rdb" id="defaultUnchecked1" name="defaultExampleRadios" value="1">
+                            <label style="margin-left: 20px;display: block;" class="custom-control-label" for="defaultUnchecked1"> DESEO CANCELAR CON UN CÓDIGO EN VENTANILLA DE BANCO/AGENTES/BANCA MÓVIL</label>
+                        </div>
+                        <img src="@Url.Content("~/img/agentes.png")" class="img-responsive">
+                    </div>
+                </div>
+                <!----------------->
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12 text-center">
+                        <div style="height:35px"></div>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label>
+                                    <input id="chklei_tc" type="checkbox" data-error="Tiene que aceptar los terminos y condiciones" required class="chk">
+                                    <a data-toggle="modal" data-target="#myModal" style="cursor:pointer;text-decoration:underline">Leí y acepto términos y condiciones</a>
+                                </label>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-danger" role="alert">
+                    <i class="fas fa-truck"></i> <b>Una vez que realizo el pago, verifique su estado de cuenta, si observa que ya le debitaron, por favor no intente otra vez, solo espere el correo de confirmación<br>Si le debitaron y no le llego el correo después de 1 hora, por favor escribir a lizbet.anampa@upch.pe o daef.pensiones@oficinas-upch.pe</b><br>
+                </div>
+                <div class="row" style="padding: 0px 10px 0px 10px">
+                    <div class="col-lg-12 text-center">
+                        <br>
+                        <button id="btnsave" type="submit" class="btn btn-block" style="background-color:#9F0530;color:#ffffff;height:55px"><b>REGISTRARSE Y PAGAR</b></button>
+                        <div style="height:20px"></div>
+                        <!--<input id='btntest' type='button' value='test'>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Ventana terminos y condiciones-->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content largemodal">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>TÉRMINOS Y CONDICIONES</b></h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body" style="text-align: justify;">
+                        Al ingresar a la ficha de registro para pago de tarifarios y todos los sitios de la web de la UPCH, el USUARIO acepta expresamente los términos de uso, políticas de privacidad y derechos de autor de este website, los cuales pueden ser modificados sin previo aviso en cualquier momento.
+                        <br>
+                        <br>
+                        Los postulantes a los Concursos Públicos de Méritos para el ingreso a la Función Notarial, una vez culminado el proceso de inscripción para rendir el examen psicológico, no podrán solicitar la devolución del pago efectuado por derecho de inscripción.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!--Fin Ventana terminos y condiciones-->
+        
+        <!--Ventana mensaje para emision de factura-->
+        <div class="modal fade" id="myModal2" role="dialog">
+            <div class="modal-dialog modal-lg">
+                <!-- Modal content-->
+                <div class="modal-content largemodal">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><b>IMPORTANTE</b></h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body" style="text-align: justify;">  
+                                              
+                        USTED DESEA SOLICITAR EMISIÓN DE FACTURA DEBERÁ COMUNICARSE AL SIGUIENTE CORREO, NO REALICE EL PAGO HASTA QUE SE HAYA COMUNICADO CON ESTE CORREO.<br><br>
+
+                        <p align="center"><a href="mailto:epgvac.cobranzas@oficinas-upch.pe">epgvac.cobranzas@oficinas-upch.pe</a></p><br>
+
+                        Los pagos de una empresa a la universidad Peruana Cayetano Heredia solo se pueden realizar con transferencia bancaria / tarjeta empresarial.<br><br>
+
+                        EL PAGO MEDIANTE LA PLATAFORMA SOLO EMITE BOLETA ELECTRÓNICA.<br><br>
+
+                        NOTA: No es posible cambio de boleta a factura o anulaciones de comprobantes.         
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Fin mensaje para emision de factura-->
+    </form>
+
+    <SCRIPT LANGUAGE="Javascript">        
+        @if (ViewBag.ctipo == "1" && ViewBag.cvalor.ToString().Substring(2,2)=="10") {
+            @Html.Raw("$(window).on('load', function() { $('#myModal2').modal('show'); });")
+        }
+    </SCRIPT>
+</body>
+</html>
+

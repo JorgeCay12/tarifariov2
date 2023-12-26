@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="dbtarifarioModelStoreContainer" CdmEntityContainer="dbtarifarioEntities1">
+    <EntitySetMapping Name="vis_data">
+      <EntityTypeMapping TypeName="dbtarifarioModel.vis_data">
+        <MappingFragment StoreEntitySet="vis_data">
+          <ScalarProperty Name="cecivil" ColumnName="cecivil" />
+          <ScalarProperty Name="csexo" ColumnName="csexo" />
+          <ScalarProperty Name="cfecha_nacimiento" ColumnName="cfecha_nacimiento" />
+          <ScalarProperty Name="cdist_nota_postula" ColumnName="cdist_nota_postula" />
+          <ScalarProperty Name="cdsc_mon" ColumnName="cdsc_mon" />
+          <ScalarProperty Name="coamra" ColumnName="coamra" />
+          <ScalarProperty Name="cdsc_modalidad" ColumnName="cdsc_modalidad" />
+          <ScalarProperty Name="cdsc_carrera" ColumnName="cdsc_carrera" />
+          <ScalarProperty Name="cdsc_convocatoria" ColumnName="cdsc_convocatoria" />
+          <ScalarProperty Name="idpostulacion" ColumnName="idpostulacion" />
+          <ScalarProperty Name="id_lnfact" ColumnName="id_lnfact" />
+          <ScalarProperty Name="ctipo" ColumnName="ctipo" />
+          <ScalarProperty Name="cstatus_ficha" ColumnName="cstatus_ficha" />
+          <ScalarProperty Name="nletras" ColumnName="nletras" />
+          <ScalarProperty Name="ntotal" ColumnName="ntotal" />
+          <ScalarProperty Name="curl" ColumnName="curl" />
+          <ScalarProperty Name="cdoc_nro" ColumnName="cdoc_nro" />
+          <ScalarProperty Name="cdoc_serie" ColumnName="cdoc_serie" />
+          <ScalarProperty Name="cdoc" ColumnName="cdoc" />
+          <ScalarProperty Name="cdsc_pago" ColumnName="cdsc_pago" />
+          <ScalarProperty Name="cdsc_art" ColumnName="cdsc_art" />
+          <ScalarProperty Name="ccod_art" ColumnName="ccod_art" />
+          <ScalarProperty Name="cdsc_ccosto" ColumnName="cdsc_ccosto" />
+          <ScalarProperty Name="ccod_ccosto" ColumnName="ccod_ccosto" />
+          <ScalarProperty Name="cemail" ColumnName="cemail" />
+          <ScalarProperty Name="ccelular" ColumnName="ccelular" />
+          <ScalarProperty Name="cdireccion" ColumnName="cdireccion" />
+          <ScalarProperty Name="cnombres" ColumnName="cnombres" />
+          <ScalarProperty Name="cmaterno" ColumnName="cmaterno" />
+          <ScalarProperty Name="cpaterno" ColumnName="cpaterno" />
+          <ScalarProperty Name="cnro_doc" ColumnName="cnro_doc" />
+          <ScalarProperty Name="dfch_crea" ColumnName="dfch_crea" />
+          <ScalarProperty Name="dfec_ins_reg" ColumnName="dfec_ins_reg" />
+          <ScalarProperty Name="ccod_ficha" ColumnName="ccod_ficha" />
+          <ScalarProperty Name="cruc" ColumnName="cruc" />
+          <ScalarProperty Name="ctipo_doc" ColumnName="ctipo_doc" />
+          <ScalarProperty Name="cdsc_ug" ColumnName="cdsc_ug" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

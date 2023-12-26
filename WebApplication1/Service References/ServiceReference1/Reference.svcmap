@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="378ee8ba-952f-475a-936b-c6673e8482bd" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="C:\Users\40417486\Desktop\contenedor\Source Contract WSDLv 3.x.x.4\MerchantExpressWs.wsdl" Protocol="file" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MerchantExpressWs.wsdl" MetadataType="Wsdl" ID="fdc7929c-b0a2-4d15-946a-1c70d7002db4" SourceId="1" SourceUrl="file:///C:/Users/40417486/Desktop/contenedor/Source Contract WSDLv 3.x.x.4/MerchantExpressWs.wsdl" />
+    <MetadataFile FileName="MerchantExpressDataTypes.xsd" MetadataType="Schema" ID="d3275f58-3d2c-4572-8232-e6d9acaa5181" SourceId="1" SourceUrl="file:///C:/Users/40417486/Desktop/contenedor/Source Contract WSDLv 3.x.x.4/SchemaCentric/MerchantExpressDataTypes.xsd" />
+    <MetadataFile FileName="MerchantExpressMessages.xsd" MetadataType="Schema" ID="076f7bbb-6def-457d-9725-c59338afd4a7" SourceId="1" SourceUrl="file:///C:/Users/40417486/Desktop/contenedor/Source Contract WSDLv 3.x.x.4/SchemaCentric/MerchantExpressMessages.xsd" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

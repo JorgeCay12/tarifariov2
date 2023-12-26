@@ -1,0 +1,99 @@
+﻿@model DataSet
+@using System.Data;
+
+
+@{
+    Layout = null;
+    string accionsql = Request.QueryString["accionsql"];
+    string id = Request.QueryString["id"];
+    string contenedor = Request.QueryString["contenedor"];
+}
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Formulario</title>
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="Formulario" style="width:700px;padding:0px;" fit="true">
+        <!--Marco con titulo-->
+        <div class="easyui-layout" fit="true">
+            <!--Toolbar Menu-->
+            <div region="north" border="true" style="padding:3px 5px;background:#efefef;height:35px;">
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save" onClick="cursos_grabar('@contenedor','@accionsql','@id')">Grabar y Cerrar</a>
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-cancelar" onClick="javascript: refreshPanel('@Url.Content("~/gestion/lista")?contenedor=@contenedor')">Cancelar</a>
+                <!--<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-save">Grabar y Nuevo</a>-->
+            </div>
+            <!--Toolbar Menu-->
+            <div id="@{@contenedor}formulario" region="center" border="false" style="padding:20px;background-color:#E9EAE5">
+                <span style='color:red'>Campos con (*) son requeridos</span>
+                <br>
+                <table cellspacing="0" cellpadding="0">
+                    <colgroup>
+                        <col width="100">
+                        <col width="350">
+                        <col width="80">
+                    </colgroup>
+                    <tr height="40px">
+                        <td>
+                            Facultad <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtcfacultad" readonly data-options="" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["cfacultad"]); }" style="width:250px;height:25px">
+                        </td>
+                        <td rowspan=5 valign=top align=right></td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Titulo <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtctitulo_ficha" data-options="validType:'length[1,200]',required:true,validateOnCreate:false,validateOnBlur:true" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["ctitulo_ficha"]); }" style="width:600px;height:25px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Cod.CCosto <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtccod_ccosto" readonly data-options="" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["ccod_ccosto"]); }" style="width:250px;height:25px">
+                        </td>
+                        <td rowspan=5 valign=top align=right></td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Des.CCosto <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtcdsc_ccosto" readonly data-options="" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["cdsc_ccosto"]); }" style="width:600px;height:25px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Enlace <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <input id="@{@contenedor}txtclink" readonly data-options="" class="easyui-textbox @{@contenedor}formulario" value="@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["clink"]); }" style="width:600px;height:25px">
+                        </td>
+                    </tr>
+                    <tr height="40px">
+                        <td>
+                            Estado <span style='color:red'>*</span>
+                        </td>
+                        <td>
+                            <select id="@{@contenedor}cmbcstatus_ficha" data-options="required:true,validateOnCreate:false,validateOnBlur:true,prompt:'-seleccionar-',editable:false,panelHeight:'auto',value:'@if (accionsql == "E") { @Html.Raw(Model.Tables[0].Rows[0]["cstatus_ficha"]); }'" class="easyui-combobox @{@contenedor}formulario" style="width:200px">
+                                <option value="X">No Activo</option>
+                                <option value="A">En Convocatoria</option>
+                                <option value="I">Cerrado</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

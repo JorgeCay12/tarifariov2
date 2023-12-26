@@ -1,0 +1,108 @@
+﻿
+@{
+    Layout = null;
+    string contenedor = Request.QueryString["contenedor"];
+    string ccod_curso = Request.QueryString["ccod_curso"];
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Reportes</title>
+</head>
+<body>
+    <div id="@(contenedor)formulario" class="easyui-panel" title="Reporte" style="width:700px;padding:20px;background-color:#E9EAE5" fit="true">
+        <!--Marco con titulo-->
+        <span style='color:red'>Campos con (*) son requeridos</span>
+        <table style="margin:15px;">
+            <colgroup>
+                <col width="120">
+                <col width="800">
+            </colgroup>
+            <tr>
+                <td>
+                    Centro de Costo <span style='color:red'>*</span>
+                </td>
+                <td colspan="8">
+                    <input id="@(contenedor)txtccod_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:100px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                    <a href="#" class="easyui-linkbutton" data-options="" onClick="buscador('0', [['ccod_ccosto', 'Codigo', 100, 'Left', false], ['cdsc_ccosto', 'Descripcion', 350, 'Left', false]], [['ccod_ccosto', '@(contenedor)txtccod_ccosto'], ['cdsc_ccosto', '@(contenedor)txtcdsc_ccosto']], 'ccod_ccosto,cdsc_ccosto', 'id_ctccosto,ccod_ccosto,cdsc_ccosto', 'adv_co_ctccosto', '', 'id_ctccosto', 'desc');" style="width:22px;height:22px;">...</a>
+                    <input id="@(contenedor)txtcdsc_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:300px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                </td>
+            </tr>
+            <tr height="40px">
+                <td>
+                    Estado <span style='color:red'>*</span>
+                </td>
+                <td>
+                    <select id="@(contenedor)cmbcdsc_pago" class="easyui-combobox" name="state" style="width:200px;height:22px;" data-options="" editable="false">
+                        <option value="" selected>TODOS</option>    
+                        <option value="A">PAGANTE</option>
+                        <option value="P">PENDIENTE</option>
+                    </select>
+                </td>
+            </tr>
+            <tr height="40px">
+                <td colspan=2>
+                    <br>
+                    <fieldset style="padding-left:10px;width:400px;border-radius: 3px;border: 1px #95B8E7 solid;background-color:#ffffff">
+                        <legend> <b>Consultas por</b> </legend>
+                        <br>
+                        <input type="radio"  name="@(contenedor)rdbconsultapor" value="pantalla" style="vertical-align: middle;"> PANTALLA<br><br>
+                        <input type="radio" checked name="@(contenedor)rdbconsultapor" value="descarga" style="vertical-align: middle;"> DESCARGA (.XLS)<br>
+                        <br>
+                    </fieldset>
+                </td>
+            </tr>
+            <tr height="40px">
+                <td colspan=2>
+                    <br><br>
+                    <a href="#" id="@(contenedor)btnbuscar" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:100px" onClick="mostrar_consulta('@(contenedor)',$('#@(contenedor)txtccod_ccosto').val(),$('#@(contenedor)cmbcdsc_pago').combobox('getValue'),'1')">Buscar</a>
+                </td>
+            </tr>
+        </table>
+        <!--Ventana Cabecera-->
+        <div id="@(contenedor)rptpantalla" class="easyui-window" title="Informacion" data-options="modal:true,closed:true,minimizable:false" style="width:800px;height:500px;padding:0px;">
+            <div id="cc" class="easyui-layout" fit='true' border='false'>
+                <!--Layout - Para separar barra de menu y la grilla y ajuste con el fit esto tiene que ir-->
+                <div data-options="region:'north',border:false" style="padding:5px;height:36px">
+                <!--Seperador Parte superior-->
+                <!--barra de menu-->
+                <!--<a id = "bgrabar" href="#" class="easyui-linkbutton" title = "Grabar" data-options = "disabled:false" onClick = "javascript:refreshPanel('<%=pagina%>?accion=formulario&accionsql=G&contenedor=<%=contenedor%>')" plain="true" iconCls="icon-nuevo">Descargar emision</a>-->
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-print" onClick="javascript: var cdoc_serie; var cdoc_nro; var cdoc; var dfch_crea; var row = $('#@(contenedor)grilla').datagrid('getSelected'); if (row) { cdoc_serie = row.cdoc_serie; cdoc_nro = row.cdoc_nro; cdoc = row.cdoc; dfch_crea = row.dfch_crea } else { $.messager.alert('Error', 'Debe de seleccionar una fila', 'error'); return; }; if (cdoc == '') { $.messager.alert('Error', 'Este registro esta como Pendiente', 'error') } else { print_view(cdoc, cdoc_serie, cdoc_nro, dfch_crea); }">Mostrar emision</a>
+                </div><!--FinSeperador Parte superior-->
+                <div data-options="region:'center',border:false" style="padding:0px">
+                    <!--Seperador Parte Inferior-->
+                    <table id="@(contenedor)grilla" rownumbers ="true" pageSize=500 sortName="dfec_ins_reg" sortOrder="desc" fit=true class="easyui-datagrid" style="" title="" pagination="false" data-options="singleSelect:true,emptyMsg:'<font color=red>No existen registros</font>',pageList: [50,100, 200, 300, 400, 500]">
+                        <thead>
+                            <tr>
+                                <th data-options="field:'dfec_ins_reg',width:150,sortable:'true'">FRegistro</th>
+                                <th data-options="field:'cnro_doc',width:100,sortable:'true'">Documento</th>
+                                <th data-options="field:'cpaterno',width:100,sortable:'true'">Paterno</th>
+                                <th data-options="field:'cmaterno',width:100,sortable:'true'">Materno</th>
+                                <th data-options="field:'cnombres',width:150,sortable:'true'">Nombres</th>
+                                <th data-options="field:'cdireccion',width:250,sortable:'true'">Direccion</th>
+                                <th data-options="field:'ccelular',width:100,sortable:'true'">Celular</th>
+                                <th data-options="field:'cemail',width:250,sortable:'true'">Email</th>
+                                <th data-options="field:'ccod_ccosto',width:100,sortable:'true'">CCosto</th>
+                                <th data-options="field:'cdsc_ccosto',width:250,sortable:'true'">CCosto</th>
+                                <th data-options="field:'ccod_art',width:100,align:'center',sortable:'true'">Tarifario</th>
+                                <th data-options="field:'cdsc_art',width:250,sortable:'true'">Tarifario</th>
+                                <th data-options="field:'ntotal',width:100,sortable:'true',align:'right'">Total</th>
+                                <th data-options="field:'cdsc_pago',width:100,sortable:'true'">Estado</th>
+                                <th data-options="field:'cdoc',width:60,sortable:'true'">Doc</th>
+                                <th data-options="field:'cdoc_serie',width:60,sortable:'true'">Serie</th>
+                                <th data-options="field:'cdoc_nro',width:60,sortable:'true'">Numero</th>
+                                <th data-options="field:'ffec_pago',width:150,sortable:'true'">FFechaPago</th>
+                                <th data-options="field:'curl',width:750,sortable:'true'">Enlace</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div><!--Fin Seperador Parte Inferior-->
+            </div>	<!--Fin Layout-->
+            <!--Fin Ventana Cabecera-->
+        </div>
+    </div>
+</body>
+</html>

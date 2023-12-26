@@ -1,0 +1,145 @@
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 19:47:07
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 19:47:09 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 19:48:32
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 19:48:33 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 19:52:10
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 19:52:11 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:12:08
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:12:09 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:12:22
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:12:22 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:16:06
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:16:06 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:17:20
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:17:36 - SI existe el DNI 40417486
+Se produjo un error:System.ArgumentOutOfRangeException: startIndex no puede ser mayor que la longitud de la cadena.
+Nombre del parámetro: startIndex
+   en System.String.Substring(Int32 startIndex, Int32 length)
+   en WebApplication1.Models.Generico.SMail(String desde, String para, String asunto, String cuerpo, String cvalor) en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Models\Generico.cs:línea 117
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 169
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:20:21
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:20:22 - SI existe el DNI 40417486
+Se produjo un error:System.IndexOutOfRangeException: No hay ninguna fila en la posición 0.
+   en System.Data.RBTree`1.GetNodeByIndex(Int32 userIndex)
+   en System.Data.DataRowCollection.get_Item(Int32 index)
+   en WebApplication1.Controllers.RegisterController.Process() en C:\Users\40417486\Desktop\contenedor\asp.net\tarifario\WebApplication1\WebApplication1\Controllers\RegisterController.cs:línea 154
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/08 20:23:04
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/08 20:23:05 - SI existe el DNI 40417486
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 11:44:28
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 11:44:29 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 10404174865
+El api entrego la respuesta: 2022/04/11 11:44:30 - SI existe el RUC 40417486
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 11:46:54
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 11:46:55 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 99999999999
+El api entrego la respuesta: 2022/04/11 11:46:55 - NO existe el RUC 99999999999
+Respuesta api: 
+{
+    "success": false,
+    "data": false,
+    "msg": "Ruc invÃ¡lido",
+    "error_code": "0012",
+    "responsetime": 0.06916618347167969
+}
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 11:47:18
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 11:47:19 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 10404174865
+El api entrego la respuesta: 2022/04/11 11:47:19 - SI existe el RUC 40417486
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 12:30:41
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 12:30:57 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 12:47:33
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 12:47:35 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 10404174865
+El api entrego la respuesta: 2022/04/11 12:47:36 - SI existe el RUC 40417486
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 14:53:26
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 14:53:27 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------
+Inicio de proceso para grabar registro - Valida dni: 1 - 2022/04/11 14:54:46
+Tipo de documento: 01 - Numero de documento: 40417486
+El api entrego la respuesta: 2022/04/11 14:54:46 - SI existe el DNI 40417486
+Inicio de validacion de Numero de ruc: 
+Termino el proceso de grabar la ficha
+-----------------------------------------------------------------------------------------------------------------------
