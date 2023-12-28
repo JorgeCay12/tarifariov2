@@ -176,8 +176,8 @@
             });
             //console.log(result)
             return result;
-            
-        }        
+
+        }
 
 
 
@@ -226,7 +226,7 @@
 
                 var isvalidate = $("#myForm")[0].checkValidity();
                 if (isvalidate) {
-                    event.preventDefault();                                                            
+                    event.preventDefault();
 
                     /*Reglas de negocio*/
                     var ntotal = parseFloat($("#txtntotal").val()) || 0
@@ -240,19 +240,19 @@
                     /*Valida si el ruc es correcto*/
                     /*
                     if ($('#cmbctipo_doc').val() == "F") {
-                        //alert(validar_ruc($('#txtcruc').val()))                        
+                        //alert(validar_ruc($('#txtcruc').val()))
                         if (validar_ruc($('#txtcruc').val()).cstatus == "0") {
                             bootbox.alert({
                                 title: "<b>Mensaje</b>",
                                 message: validar_ruc($('#txtcruc').val()).cmessage
                             });
                             return
-                        };                        
+                        };
                     }
                     */
                     //alert("a")
                     //return
-                    /******************************/                   
+                    /******************************/
 
                     var ctpago = $("input[name='defaultExampleRadios']:checked").val() //valor de lo seleccionado ALIGNET o SAFETYPAY
 
@@ -286,6 +286,8 @@
                     xml += "<ccod_ccosto>" + $('#txtccod_ccosto').val() + "</ccod_ccosto>"
                     xml += "<cdsc_ccosto>" + $('#txtcdsc_ccosto').val() + "</cdsc_ccosto>"
                     xml += "<ctipo>" + $('#txtctipo').val() + "</ctipo>"
+                    xml += '<gcod_convocatoria>' + $.trim(especiales($('#txtgcod_convocatoria').val())) + '</gcod_convocatoria>';
+                    xml += '<cdsc_descripcion>' + $.trim(especiales($('#txtcdsc_descripcion').val())) + '</cdsc_descripcion>';
                     xml += "</cabecera>"
                     xml += "</root>"
                     //</text>
@@ -390,6 +392,8 @@
                                                 xml += '<cdestino>' + cdestino + '</cdestino>'; //al grabar la preliquidacion le asigna los 3 primeros digitos dependiendo de la moneda 0=soles(514)/1dolares(353)
                                                 xml += '<ctelef2>' + $('#txtccelular').val() + '</ctelef2>';
                                                 xml += '<cdsc_ficha>' + 'TARIFARIO' + '</cdsc_ficha>';
+                                                xml += '<gcod_convocatoria>' + $.trim(especiales($('#txtgcod_convocatoria').val())) + '</gcod_convocatoria>';
+                                                xml += '<cdsc_descripcion>' + $.trim(especiales($('#txtcdsc_descripcion').val())) + '</cdsc_descripcion>';
                                                 xml += '</cabecera>';
 
                                                 xml += '<detalle>'
@@ -707,10 +711,36 @@
                             <div class="help-block with-errors"></div>
                         </div>
                     </div>
+                    @{
+                        var gcodConvocatoria = "";
+                        if (Model.Tables.Count > 0 && Model.Tables[0].Columns.Contains("gcod_convocatoria") && Model.Tables[0].Rows.Count > 0)
+                        {
+                            gcodConvocatoria = Model.Tables[0].Rows[0]["gcod_convocatoria"].ToString();
+                        }
+                    }
+                    <input id="txtgcod_convocatoria" value="@Html.Raw(gcodConvocatoria)" hidden />
+                    @{
+                        var ctitulo = "";
+                        if (Model.Tables.Count > 0 && Model.Tables[0].Columns.Contains("gcod_convocatoria") && Model.Tables[0].Rows.Count > 0)
+                        {
+                            ctitulo = Model.Tables[0].Rows[0]["ctitulo"].ToString();
+                        }
+                    }
+                    <input id="txtcdsc_descripcion" value="@Html.Raw(ctitulo)" hidden />
+
+
                 </div>
-                <!--Si es factura-->
-                <script>
-                    function solo_factura(valor) {
+
+
+
+
+<!--Si es factura-->
+
+
+
+
+<script>
+function solo_factura(valor) {
                         if (valor == "F") {
                             $('#divfactura').css('display', 'inline');
                             $("#txtcruc").prop("required", true);

@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
+using System.Web.WebPages;
 using System.Xml;
 using WebApplication1.Models;
 
@@ -57,6 +58,7 @@ namespace WebApplication1.Controllers
             string mensaje_error = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>El enlace no existe</div></div></body>";
             string mensaje_error_creo = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>Esta pagina se habilitará próximamente.</div></div></body>";
             string mensaje_cerrar = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>Gracias por su preferencia, el curso ya no se encuentra en convocatoria</div></div></body>";
+            string mensaje_limite_vacante = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>Gracias por su preferencia, el curso ya alcanzo a su limite de vacantes</div></div></body>";
             //string mensaje_mantenimiento = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-primary text-center' role='alert'>La pagina se encuentra en mantenimiento, regresamos a las 14:00 horas, disculpen los inconvenientes</div></div></body>";
 
             ViewBag.cfactura = "N";
@@ -81,7 +83,11 @@ namespace WebApplication1.Controllers
                     //{                    
 
                     string cstatus_ficha = "";
+                    string fch_convocatoria_fin = "";
+                    int nvacantes = 0;
+                    int nvacantes_registradas = 0;
                     string ccod_grupo = "";
+                    Guid gcod;
                     arreglo = new object[4, 2] { { "@accion", "LTC" }, { "@ctipo", id }, { "@cvalor", id2 }, { "@ccod_cia", "U16" } };
                     ds = obj2.GetDataSet("upch299", "usp_dgagenericos", arreglo);                                                
                     if (ds.Tables[0].Rows.Count > 0)
@@ -91,14 +97,25 @@ namespace WebApplication1.Controllers
 
                         if (id == "1") // solo curso, se busca por centro de costo
                         {
-                            cstatus_ficha = ds.Tables[0].Rows[0]["cstatus_ficha"].ToString();
+                            if(Guid.TryParse(id2, out gcod))
+                            {
+                                cstatus_ficha = ds.Tables[0].Rows[0]["cstatus_ficha"].ToString();
+                                fch_convocatoria_fin = ds.Tables[0].Rows[0]["dconvocatoria_fin_activo"].ToString();
+                                nvacantes = Convert.ToInt32(ds.Tables[0].Rows[0]["nvacantes"].ToString());
+                                nvacantes_registradas = Convert.ToInt32(ds.Tables[0].Rows[0]["nvacantes_registradas"].ToString());
+                            }
+                            
                             if (cstatus_ficha == "X")
                             {
                                 return Content(mensaje_error);
                             }
-                            else if (cstatus_ficha == "I")
+                            else if (cstatus_ficha == "I" || (Guid.TryParse(id2, out gcod) && fch_convocatoria_fin.AsDateTime() <= DateTime.Now))
                             {
                                 return Content(mensaje_cerrar);
+                            }
+                            else if (Guid.TryParse(id2, out gcod) && nvacantes_registradas >= nvacantes)
+                            {
+                                return Content(mensaje_limite_vacante);
                             }
                             else
                             {
