@@ -1,0 +1,87 @@
+@{
+    Layout = null;
+
+    string sort = "nid";
+    string order = "desc";
+    string jsonname = @Url.Content("~/gestionConvocatoria/jsonConvocatoria");
+    // string pagina = @Url.Content("~/gestion/formulario");
+
+    string tamano_campo = "50,200,100,350,100,350,400,400,400,400";
+    string titulo_campo = "Id,Facultad,Estado,Titulo,CodCCosto,DesConvocatoria,Enlace,Vacantes,fchConvocatoriaInicio,fchConvocatoriaFin";
+    string alineacion_campo = "Left,Left,Left,Left,Left,Left,Left,Left,Left,Left";
+    string nombre_campo = "nid,cfacultad,cdsc_status_ficha,ctitulo_ficha,ccod_ccosto,cdsc_descripcion,clink,nvacantes,dconvocatoria_inicio_activo,dconvocatoria_fin_activo";
+
+    string[] tamano_campo_a = tamano_campo.Split(',');
+    string[] titulo_campo_a = titulo_campo.Split(',');
+    string[] alineacion_campo_a = alineacion_campo.Split(',');
+    string[] nombre_campo_a = nombre_campo.Split(',');
+
+    string contenedor = Request.QueryString["contenedor"];
+
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Lista</title>
+</head>
+<body>
+    <div id="p" class="easyui-panel" title="Listado" style="width:700px;padding:0px;" fit="true">
+        <!--Marco con titulo-->
+        <div id="cc" class="easyui-layout" fit='true' border='false'>
+            <!--Layout - Para separar barra de menu y la grilla y ajuste con el fit esto tiene que ir-->
+            <div data-options="region:'north',border:false" style="padding:5px;height:36px">
+                <!--Seperador Parte superior-->
+                <!--barra de menu-->
+                <a id="bgrabar" href="#" class="easyui-linkbutton" title="Grabar" onClick="javascript:refreshPanel('@Url.Content("~/gestionConvocatoria/formulario")?accionsql=GC&contenedor=@(contenedor)')" plain="true" iconCls="icon-nuevo">Nuevo</a>
+                <a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-editar" onClick="javascript: if (esta_seleccionado('@(contenedor)dgvlistado')) { refreshPanel('@Url.Content("~/gestionConvocatoria/formulario")?accionsql=EC&contenedor=@(contenedor)&id=' + $('#@(contenedor)dgvlistado').datagrid('getSelected').nid) } else { $.messager.alert('Error','Debe de seleccionar una fila','error'); } ">Configurar</a>
+                <!--<a href="#" disabled class="easyui-linkbutton" plain="true" iconCls="icon-eliminar">Eliminar</a>-->
+                <!--<a id="bgrabar" href="#" class="easyui-linkbutton" title="Grabar" onClick="javascript: if (esta_seleccionado('@(contenedor)dgvlistado')) { var curl = '' ; var row = $('#@(contenedor)dgvlistado').datagrid('getSelected'); if (row){ curl = row.curl  } ; open_safetypay('@contenedor',curl) } else { $.messager.alert('Error','Debe de seleccionar una fila','error'); }" plain="true" iconCls="icon-trazabilidad">Codigo SafetyPay</a>-->
+                <!--<a href="#" disabled class="easyui-linkbutton" plain="true" iconCls="icon-eliminar">Anular</a>-->
+                <!--<a href="#" disabled class="easyui-linkbutton" plain="true" iconCls="icon-eliminar">Ver Emision</a>-->
+                <!--<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-print" onClick="var cdoc_serie; var cdoc_nro; var cdoc; var row = $('#@(contenedor)dgvlistado').datagrid('getSelected'); if (row) { cdoc_serie = row.cdoc_serie_emi; cdoc_nro = row.cdoc_nro_emi; cdoc = row.cdoc_emi } else { $.messager.alert('Error','Debe de seleccionar una fila','error'); return; }; print_view(cdoc, cdoc_serie, cdoc_nro)">Ver Emision</a>-->
+                <!--<a href="#" class="easyui-linkbutton" plain="true" iconCls="icon-eliminar" onclick="javascript:document.location.href = '@Url.Content("~/PreLiquidacion/Estado")'">Estado</a>-->
+                <!--Fin barra de menu-->
+                <!--Filtros-->
+                <div style="position:relative;right:10px;float:right">
+                    <b>Filtro </b>
+                    <select id="@(contenedor)cmbccampo_filtro" class="easyui-combobox" data-options="editable:false,panelHeight:'auto',onChange: function(rec){ if ( $(this).combobox('getValue') == 'Todos') { $('#@(contenedor)txtcvalor_filtro').textbox({disabled: true,value: ''}) ; $('#@(contenedor)dgvlistado').datagrid({url:'@{ @Html.Raw(jsonname); }?filtro=0'}) } else { $('#@(contenedor)txtcvalor_filtro').textbox({disabled: false}).textbox('textbox').focus()  ;  }  ;   }" style="width:150px">
+                        <option value="Todos">Todos</option>
+                        @{
+                            for (int i = 0; i < titulo_campo_a.Length; i++)
+                            {
+                                @Html.Raw("<option value='" + nombre_campo_a[i] + "'>" + titulo_campo_a[i] + "</option>");
+                            }
+                        }
+                    </select>
+                    <input id="@(contenedor)txtcvalor_filtro" class="easyui-textbox" style="width:200px;height:25px" data-options="onClickButton:function(){  $('#@(contenedor)dgvlistado').datagrid({url:'@{ @Html.Raw(jsonname); }?filtro=1&campobuscar='+  $('#@(contenedor)cmbccampo_filtro').combobox('getValue') +'&textobuscar=' + $('#@(contenedor)txtcvalor_filtro').textbox('getValue')   });   },buttonText:'',buttonAlign:'right',buttonIcon:'icon-search',prompt:''">
+                </div>
+                <!--Fin Filtros-->
+            </div><!--FinSeperador Parte superior-->
+            <div data-options="region:'center',border:false" style="padding:0px">
+                <!--Seperador Parte Inferior-->
+                <table id="@(contenedor)dgvlistado" class="easyui-datagrid" pagesize="50" style="" filtro="0" sortName="@{ @Html.Raw(sort); }" sortOrder="@{ @Html.Raw(order); }" data-options="url:'@{ @Html.Raw(jsonname); }?filtro=0',emptyMsg:'<font color=red>No existen registros</font>',method:'get',singleSelect:true,pagination:true,fit:true,checkOnSelect:false,selectOnCheck:false,rowStyler:function(index,row){if(row.cdsc_status_ficha=='Cerrado'){ return 'color:red'} else if (row.cdsc_status_ficha=='En Convocatoria'){ return 'color:blue'}  }">
+                    <thead>
+                        <tr>
+                            <th data-options="field:'ck',checkbox:true"></th>
+                            @{
+                                for (int i = 0; i < tamano_campo_a.Length; i++)
+                                {
+                                    @Html.Raw("<th data-options=\"align:\'" + alineacion_campo_a[i] + "\',sortable:true,field:\'" + nombre_campo_a[i] + "\',width:" + tamano_campo_a[i] + "\">" + titulo_campo_a[i] + "</th>");
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div><!--Fin Seperador Parte Inferior-->
+        </div>	<!--Fin Layout-->
+    </div><!--Fin Marco con titulo-->
+    <!--Ventana Detalle-->
+    <!--
+    -->
+    <!--Fin Ventana Detalle-->
+</body>
+</html>

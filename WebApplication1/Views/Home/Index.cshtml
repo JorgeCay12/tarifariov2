@@ -102,6 +102,9 @@
                 case "010101":
                     pagina = "@Url.Content("~/gestion/lista")" + "?contenedor=" + contenedor
                     break;
+                case "010104":
+                    pagina = "@Url.Content("~/gestionConvocatoria/lista")" + "?contenedor=" + contenedor
+                    break;
                 case "010201":
                     pagina = "@Url.Content("~/reporte1/index")" + "?contenedor=" + contenedor
                     break;
@@ -522,6 +525,57 @@
         //console.log(generar_xml(formulario))
         }
 
+        function convocatoria_grabar(contenedor, accionsql, id) {
+
+            //alert("aqui")
+
+            if ($('#' + contenedor + "formulario").form('validate') == false) {
+                //alert("faltan campos requeridos")
+                //$.messager.alert('Error','Debe de ingresar campos requeridos');
+                $.messager.alert('Error', 'Debe de ingresar campos requeridos', 'error');
+                return
+            }
+
+            $.messager.confirm('Confirmar', 'Esta Seguro de Grabar los datos?', function (r) {
+                if (r) {
+
+
+                    var xml
+                    xml = "<root>"
+                    xml += "<cabecera>"
+                    xml += generar_xml(contenedor + "formulario")
+                    xml += "</cabecera>"
+                    xml += "</root>"
+
+                    console.log(xml)
+                    //return
+
+                    $.ajax({
+                        url: "@Url.Content("~/gestionConvocatoria/grabar")?contenedor=" + contenedor + "&accionsql=" + accionsql + "&id=" + id,
+                        contentType: "application/x-www-form-urlencoded",
+                        dataType: "html",
+                        type: "post",
+                        data: { 'xml': escape(xml) },
+                        success: function (data) {
+                            if (data == "ok") {
+                                refreshPanel("@Url.Content("~/gestionConvocatoria/lista")?contenedor=" + contenedor)
+                                $.messager.alert('Registro', 'Los datos se grabaron satisfactoriamente.', 'info');
+                            } else {
+                                //alert("Error:\n\n" + data.substring(2, 500))
+                                $.messager.alert('Mensaje', data.substring(2, 500), 'error');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            alert(status);
+                        }
+                    });
+
+            }
+
+            })
+        //console.log(generar_xml(formulario))
+        }
+
 
         function laboratorio_online_grabar(contenedor, accionsql, id) {
 
@@ -883,6 +937,9 @@
                     case "cmb":
                         xml += "<" + mcampo(id) + ">" + especiales($('#' + id).combobox('getValue')) + "</" + mcampo(id) + ">"
                         break;
+                    case "fch":
+                        xml += "<" + mcampo(id) + ">" + especiales($('#' + id).datebox('getValue')) + "</" + mcampo(id) + ">"
+                        break;
                     default:
                 }
             });
@@ -913,6 +970,11 @@
             if (str.indexOf("rb") > -1) {
                 position = str.indexOf("rb")
                 str = str.substring(position + 2, 100)
+            }
+
+            if (str.indexOf("fch") > -1) {
+                position = str.indexOf("fch")
+                str = str.substring(position + 3, 100)
             }
 
 
