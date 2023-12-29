@@ -4,6 +4,8 @@
     <EntitySetMapping Name="vis_data">
       <EntityTypeMapping TypeName="dbtarifarioModel.vis_data">
         <MappingFragment StoreEntitySet="vis_data">
+          <ScalarProperty Name="cdsc_descripcion" ColumnName="cdsc_descripcion" />
+          <ScalarProperty Name="gcod_convocatoria" ColumnName="gcod_convocatoria" />
           <ScalarProperty Name="cecivil" ColumnName="cecivil" />
           <ScalarProperty Name="csexo" ColumnName="csexo" />
           <ScalarProperty Name="cfecha_nacimiento" ColumnName="cfecha_nacimiento" />

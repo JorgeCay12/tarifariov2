@@ -6,12 +6,14 @@
     <edmx:StorageModels>
     <Schema Namespace="dbtarifarioModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errores durante la generación:
-advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
+advertencia 6002: La tabla o vista 'dbtarifario1.dbo.vis_data' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="vis_data">
           <Key>
             <PropertyRef Name="ccod_ficha" />
             <PropertyRef Name="cnro_doc" />
             <PropertyRef Name="ccod_art" />
+            <PropertyRef Name="gcod_convocatoria" />
+            <PropertyRef Name="cdsc_descripcion" />
           </Key>
           <Property Name="cdsc_ug" Type="varchar" MaxLength="6" />
           <Property Name="ctipo_doc" Type="char" MaxLength="1" />
@@ -50,6 +52,8 @@ advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida 
           <Property Name="cfecha_nacimiento" Type="nvarchar" MaxLength="4000" />
           <Property Name="csexo" Type="varchar" MaxLength="1" />
           <Property Name="cecivil" Type="varchar" MaxLength="20" />
+          <Property Name="gcod_convocatoria" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="cdsc_descripcion" Type="varchar" MaxLength="300" Nullable="false" />
         </EntityType>
         <EntityContainer Name="dbtarifarioModelStoreContainer">
           <EntitySet Name="vis_data" EntityType="Self.vis_data" store:Type="Views" store:Schema="dbo">
@@ -90,7 +94,9 @@ advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida 
     [vis_data].[cdist_nota_postula] AS [cdist_nota_postula], 
     [vis_data].[cfecha_nacimiento] AS [cfecha_nacimiento], 
     [vis_data].[csexo] AS [csexo], 
-    [vis_data].[cecivil] AS [cecivil]
+    [vis_data].[cecivil] AS [cecivil], 
+    [vis_data].[gcod_convocatoria] AS [gcod_convocatoria], 
+    [vis_data].[cdsc_descripcion] AS [cdsc_descripcion]
     FROM [dbo].[vis_data] AS [vis_data]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
@@ -106,6 +112,8 @@ advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida 
             <PropertyRef Name="ccod_ficha" />
             <PropertyRef Name="cnro_doc" />
             <PropertyRef Name="ccod_art" />
+            <PropertyRef Name="gcod_convocatoria" />
+            <PropertyRef Name="cdsc_descripcion" />
           </Key>
           <Property Name="cdsc_ug" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
           <Property Name="ctipo_doc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
@@ -144,6 +152,8 @@ advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida 
           <Property Name="cfecha_nacimiento" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="csexo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="cecivil" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="gcod_convocatoria" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="cdsc_descripcion" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -154,6 +164,8 @@ advertencia 6002: La tabla o vista 'dbtarifario.dbo.vis_data' no tiene definida 
           <EntitySetMapping Name="vis_data">
             <EntityTypeMapping TypeName="dbtarifarioModel.vis_data">
               <MappingFragment StoreEntitySet="vis_data">
+                <ScalarProperty Name="cdsc_descripcion" ColumnName="cdsc_descripcion" />
+                <ScalarProperty Name="gcod_convocatoria" ColumnName="gcod_convocatoria" />
                 <ScalarProperty Name="cecivil" ColumnName="cecivil" />
                 <ScalarProperty Name="csexo" ColumnName="csexo" />
                 <ScalarProperty Name="cfecha_nacimiento" ColumnName="cfecha_nacimiento" />

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="831e41a83fcc4355a636d1db45479b1c" Name="Diagram1" ZoomLevel="48">
+      <Diagram DiagramId="831e41a83fcc4355a636d1db45479b1c" Name="Diagram1" ZoomLevel="82">
         <EntityTypeShape EntityType="dbtarifarioModel.vis_data" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>

@@ -6,10 +6,10 @@
     string jsonname = @Url.Content("~/reporte_pantalla/json");
     string pagina = @Url.Content("~/roles/formulario");
 
-    string tamano_campo = "80,60,110,110,100,100,100,200,500,100,300,100,500,80,500,100,50,80,80,1400,80,80";
-    string titulo_campo = "CodFicha,UG,FRegistro,FPago,NroDoc,Paterno,Materno,Nombres,Direccion,Celular,Email,CodCCosto,DesCCosto,CodTarifario,DesTarifario,DesPago,DocE,SerieE,NumeroE,Enlace,Moneda,Total";
-    string alineacion_campo = "Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Right";
-    string nombre_campo = "ccod_ficha,cdsc_ug,dfec_ins_reg,dfch_crea,cnro_doc,cpaterno,cmaterno,cnombres,cdireccion,ccelular,cemail,ccod_ccosto,cdsc_ccosto,ccod_art,cdsc_art,cdsc_pago,cdoc,cdoc_serie,cdoc_nro,curl,cdsc_mon,ntotal";
+    string tamano_campo = "80,60,110,110,100,100,100,200,500,100,300,100,500,80,500,100,50,80,80,1400,80,80,110,110";
+    string titulo_campo = "CodFicha,UG,FRegistro,FPago,NroDoc,Paterno,Materno,Nombres,Direccion,Celular,Email,CodCCosto,DesCCosto,CodTarifario,DesTarifario,DesPago,DocE,SerieE,NumeroE,Enlace,Moneda,Total,gcod_convocatoria,cdsc_descripcion";
+    string alineacion_campo = "Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Left,Right,Left,Left";
+    string nombre_campo = "ccod_ficha,cdsc_ug,dfec_ins_reg,dfch_crea,cnro_doc,cpaterno,cmaterno,cnombres,cdireccion,ccelular,cemail,ccod_ccosto,cdsc_ccosto,ccod_art,cdsc_art,cdsc_pago,cdoc,cdoc_serie,cdoc_nro,curl,cdsc_mon,ntotal,gcod_convocatoria,cdsc_descripcion";
 
     string[] tamano_campo_a = tamano_campo.Split(',');
     string[] titulo_campo_a = titulo_campo.Split(',');

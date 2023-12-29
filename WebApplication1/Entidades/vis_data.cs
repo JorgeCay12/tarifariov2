@@ -51,5 +51,7 @@ namespace WebApplication1.Entidades
         public string cfecha_nacimiento { get; set; }
         public string csexo { get; set; }
         public string cecivil { get; set; }
+        public string gcod_convocatoria { get; set; }
+        public string cdsc_descripcion { get; set; }
     }
 }

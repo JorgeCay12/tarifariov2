@@ -8,6 +8,8 @@
       <PropertyRef Name="ccod_ficha" />
       <PropertyRef Name="cnro_doc" />
       <PropertyRef Name="ccod_art" />
+      <PropertyRef Name="gcod_convocatoria" />
+      <PropertyRef Name="cdsc_descripcion" />
     </Key>
     <Property Name="cdsc_ug" Type="String" MaxLength="6" FixedLength="false" Unicode="false" />
     <Property Name="ctipo_doc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
@@ -46,5 +48,7 @@
     <Property Name="cfecha_nacimiento" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
     <Property Name="csexo" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
     <Property Name="cecivil" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="gcod_convocatoria" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="cdsc_descripcion" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>
