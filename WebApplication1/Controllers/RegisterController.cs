@@ -77,6 +77,7 @@ namespace WebApplication1.Controllers
                 {                  
 
                     string cstatus_ficha = "";
+                    string ccod_grupo = "";
                     arreglo = new object[4, 2] { { "@accion", "LTC" }, { "@ctipo", id }, { "@cvalor", id2 }, { "@ccod_cia", "U16" } };
                     ds = obj2.GetDataSet("upch299", "usp_dgagenericos", arreglo);                                                
                     if (ds.Tables[0].Rows.Count > 0)
