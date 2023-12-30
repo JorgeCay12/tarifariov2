@@ -3,6 +3,7 @@
     Layout = null;
     string contenedor = Request.QueryString["contenedor"];
     string ccod_curso = Request.QueryString["ccod_curso"];
+    string c_tipo_reporte = Request["c_tipo_reporte"];
 }
 
 <!DOCTYPE html>
@@ -21,23 +22,39 @@
                 <col width="120">
                 <col width="800">
             </colgroup>
-            <tr>
-                <td>
-                    Centro de Costo <span style='color:red'>*</span>
-                </td>
-                <td colspan="8">
-                    <input id="@(contenedor)txtccod_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:100px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
-                    <a href="#" class="easyui-linkbutton" data-options="" onClick="buscador('0', [['ccod_ccosto', 'Codigo', 100, 'Left', false], ['cdsc_ccosto', 'Descripcion', 350, 'Left', false]], [['ccod_ccosto', '@(contenedor)txtccod_ccosto'], ['cdsc_ccosto', '@(contenedor)txtcdsc_ccosto']], 'ccod_ccosto,cdsc_ccosto', 'id_ctccosto,ccod_ccosto,cdsc_ccosto', 'adv_co_ctccosto', '', 'id_ctccosto', 'desc');" style="width:22px;height:22px;">...</a>
-                    <input id="@(contenedor)txtcdsc_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:300px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
-                </td>
-            </tr>
+            @if (c_tipo_reporte == "C")
+            {
+                <tr>
+                    <td>
+                        Convocatoria <span style='color:red'>*</span>
+                    </td>
+                    <td colspan="8">
+                        <input id="@(contenedor)txtgcod_convocatoria" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:100px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                        <a href="#" class="easyui-linkbutton" data-options="" onClick="buscador('0', [['gcod_convocatoria', 'Codigo Convocatoria', 100, 'Left', false], ['cdsc_descripcion', 'Descripcion Convocatoria', 350, 'Left', false] , ['ccod_ccosto', 'Codigo Centro Costo', 100, 'Left', false], ['cdsc_ccosto', 'Descripcion Centro Costo', 350, 'Left', false]], [['gcod_convocatoria', '@(contenedor)txtgcod_convocatoria'], ['cdsc_descripcion', '@(contenedor)txtcdsc_descripcion']], 'gcod_convocatoria,cdsc_descripcion,ccod_ccosto,cdsc_ccosto', 'nid,gcod_convocatoria,cdsc_descripcion,ccod_ccosto,cdsc_ccosto', 'adv_pct_convocatorias', '', 'nid', 'desc');" style="width:22px;height:22px;">...</a>
+                        <input id="@(contenedor)txtcdsc_descripcion" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:300px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td>
+                        Centro de Costo <span style='color:red'>*</span>
+                    </td>
+                    <td colspan="8">
+                        <input id="@(contenedor)txtccod_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:100px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                        <a href="#" class="easyui-linkbutton" data-options="" onClick="buscador('0', [['ccod_ccosto', 'Codigo', 100, 'Left', false], ['cdsc_ccosto', 'Descripcion', 350, 'Left', false]], [['ccod_ccosto', '@(contenedor)txtccod_ccosto'], ['cdsc_ccosto', '@(contenedor)txtcdsc_ccosto']], 'ccod_ccosto,cdsc_ccosto', 'id_ctccosto,ccod_ccosto,cdsc_ccosto', 'adv_co_ctccosto', '', 'id_ctccosto', 'desc');" style="width:22px;height:22px;">...</a>
+                        <input id="@(contenedor)txtcdsc_ccosto" readonly title="a" class="easyui-textbox @(contenedor)formulario" style="width:300px;height:22px" value="" data-options="required:true,validateOnCreate:false,validateOnBlur:true">
+                    </td>
+                </tr>
+            }
             <tr height="40px">
                 <td>
                     Estado <span style='color:red'>*</span>
                 </td>
                 <td>
                     <select id="@(contenedor)cmbcdsc_pago" class="easyui-combobox" name="state" style="width:200px;height:22px;" data-options="" editable="false">
-                        <option value="" selected>TODOS</option>    
+                        <option value="" selected>TODOS</option>
                         <option value="A">PAGANTE</option>
                         <option value="P">PENDIENTE</option>
                     </select>
@@ -49,18 +66,30 @@
                     <fieldset style="padding-left:10px;width:400px;border-radius: 3px;border: 1px #95B8E7 solid;background-color:#ffffff">
                         <legend> <b>Consultas por</b> </legend>
                         <br>
-                        <input type="radio"  name="@(contenedor)rdbconsultapor" value="pantalla" style="vertical-align: middle;"> PANTALLA<br><br>
+                        <input type="radio" name="@(contenedor)rdbconsultapor" value="pantalla" style="vertical-align: middle;"> PANTALLA<br><br>
                         <input type="radio" checked name="@(contenedor)rdbconsultapor" value="descarga" style="vertical-align: middle;"> DESCARGA (.XLS)<br>
                         <br>
                     </fieldset>
                 </td>
             </tr>
-            <tr height="40px">
-                <td colspan=2>
-                    <br><br>
-                    <a href="#" id="@(contenedor)btnbuscar" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:100px" onClick="mostrar_consulta('@(contenedor)',$('#@(contenedor)txtccod_ccosto').val(),$('#@(contenedor)cmbcdsc_pago').combobox('getValue'),'1')">Buscar</a>
-                </td>
-            </tr>
+            @if (c_tipo_reporte == "C")
+            {
+                <tr height="40px">
+                    <td colspan=2>
+                        <br><br>
+                        <a href="#" id="@(contenedor)btnbuscar" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:100px" onClick="mostrar_consulta('@(contenedor)',$('#@(contenedor)txtgcod_convocatoria').val(),$('#@(contenedor)cmbcdsc_pago').combobox('getValue'),'1', '@c_tipo_reporte')">Buscar</a>
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr height="40px">
+                    <td colspan=2>
+                        <br><br>
+                        <a href="#" id="@(contenedor)btnbuscar" class="easyui-linkbutton" data-options="iconCls:'icon-search'" style="width:100px" onClick="mostrar_consulta('@(contenedor)',$('#@(contenedor)txtccod_ccosto').val(),$('#@(contenedor)cmbcdsc_pago').combobox('getValue'),'1')">Buscar</a>
+                    </td>
+                </tr>
+            }
         </table>
         <!--Ventana Cabecera-->
         <div id="@(contenedor)rptpantalla" class="easyui-window" title="Informacion" data-options="modal:true,closed:true,minimizable:false" style="width:800px;height:500px;padding:0px;">

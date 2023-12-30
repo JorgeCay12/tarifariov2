@@ -120,6 +120,9 @@
                 case "010205":
                     pagina = "@Url.Content("~/ReporteTarifariosDiversos/index")" + "?ctipo=3&contenedor=" + contenedor
                     break;
+                case "010206":
+                    pagina = "@Url.Content("~/reporte1/index")" + "?c_tipo_reporte=C&contenedor=" + contenedor
+                    break;
                 case "990101":
                     pagina = "@Url.Content("~/usuarios/lista/")" + "?contenedor=" + contenedor
                     break;
@@ -271,7 +274,7 @@
 
 
 
-        function mostrar_consulta(contenedor, cvalor, cdsc_pago, ctipo) {
+        function mostrar_consulta(contenedor, cvalor, cdsc_pago, ctipo, c_tipo_reporte) {
 
 
             //alert(ctipo)
@@ -295,7 +298,7 @@
 					    url: '@Url.Content("~/Reporte1/Result")'
 						,queryParams:
 							{
-							    cdsc_pago: cdsc_pago, cvalor: cvalor, ctipo: ctipo
+                            cdsc_pago: cdsc_pago, cvalor: cvalor, ctipo: ctipo, c_tipo_reporte: c_tipo_reporte
 							}
 						,onLoadSuccess: function (data) {
 						    $('#' + contenedor + 'btnbuscar').linkbutton({
@@ -315,7 +318,7 @@
 				)
 
             } else {
-                document.location.href = "@Url.Content("~/reporte1/excel")" + "?cdsc_pago=" + cdsc_pago + "&cvalor=" + cvalor + "&ctipo=" + ctipo
+                document.location.href = "@Url.Content("~/reporte1/excel")" + "?cdsc_pago=" + cdsc_pago + "&cvalor=" + cvalor + "&ctipo=" + ctipo + "&c_tipo_reporte=" + c_tipo_reporte
             }
         }
 

@@ -23,13 +23,14 @@ namespace WebApplication1.Controllers
             string cdsc_pago = Request.QueryString["cdsc_pago"];
             string cvalor = Request.QueryString["cvalor"];
             string ctipo = Request.QueryString["ctipo"];
+            string c_tipo_reporte = Request.QueryString["c_tipo_reporte"];
             int page = 0; //Convert.ToInt32(Request.Form["page"].ToString());
             int rows = 0; // Convert.ToInt32(Request.Form["rows"].ToString());
             string sort = "nid"; //Request.Form["sort"];
             string order = "desc"; //Request.Form["order"];
 
             WebApplication1.Models.Generico obj2 = new WebApplication1.Models.Generico();
-            object[,] arreglo = new object[4, 2] { { "@accion", "RE1" }, { "@cdsc_pago", cdsc_pago }, { "@cvalor", cvalor }, { "@ctipo", ctipo } };
+            object[,] arreglo = new object[5, 2] { { "@accion", "RE1" }, { "@cdsc_pago", cdsc_pago }, { "@cvalor", cvalor }, { "@ctipo", ctipo }, { "@ctipo_reporte", c_tipo_reporte } };
             System.Data.DataTable dt = new System.Data.DataTable();
             dt = obj2.GetDatatable("db", "ads_genericos", arreglo);
 
@@ -45,10 +46,11 @@ namespace WebApplication1.Controllers
             string cdsc_pago = Request.Form["cdsc_pago"];
             string cvalor = Request.Form["cvalor"];
             string ctipo = Request.Form["ctipo"];
+            string c_tipo_reporte = Request.Form["c_tipo_reporte"];
 
             string result;
             WebApplication1.Models.Generico obj2 = new WebApplication1.Models.Generico();
-            object[,] arreglo = new object[4, 2] { { "@accion", "RE1" }, { "@cdsc_pago", cdsc_pago }, { "@cvalor", cvalor }, { "@ctipo", ctipo } };
+            object[,] arreglo = new object[5, 2] { { "@accion", "RE1" }, { "@cdsc_pago", cdsc_pago }, { "@cvalor", cvalor }, { "@ctipo", ctipo }, { "@ctipo_reporte", c_tipo_reporte } };
             DataSet ds = new DataSet();
             ds = obj2.GetDataSet("db", "ads_genericos", arreglo);
             //result = "{\"total\":" + dt.Rows[0]["ntotal"].ToString() + ",\"rows\":" + (dt.Rows.Count > 0 ? obj2.DataTableToJSONWithStringBuilder(dt) : "[]") + "}";
