@@ -99,7 +99,7 @@ namespace WebApplication1.Controllers
             string id = Request.QueryString["id"];
 
             WebApplication1.Models.Generico obj2 = new WebApplication1.Models.Generico();
-            object[,] arreglo = new object[3, 2] { { "@accion", accionsql }, { "@xml", xml }, { "@id", id } };
+            object[,] arreglo = new object[4, 2] { { "@accion", accionsql }, { "@xml", xml }, { "@id", id }, { "@ccod_usuario", Session["ccod_usuario"] } };
             DataTable dt = new DataTable();
             dt = obj2.GetDatatable("db", "ads_genericos", arreglo);
             return Content(dt.Rows[0]["resultado"].ToString());

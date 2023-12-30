@@ -153,7 +153,8 @@
                             Fecha Inicio <span style='color:red'>*</span>
                         </td>
                         <td>
-                            <input id="@{@contenedor}fchcinicio" data-options="validType:'length[1,200]',required:true,validateOnCreate:false,validateOnBlur:true, editable:false, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_inicio_activo"]); }'" class="easyui-datebox @{@contenedor}formulario" value="" style="width:600px;height:25px">
+                            <input id="@{@contenedor}fchcinicio" data-options="required:true,validateOnCreate:false,validateOnBlur:true, editable:true, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_inicio_activo"]); }'" class="easyui-datetimebox @{@contenedor}formulario" style="width:200px;">
+                            @*<input id="@{@contenedor}fchcinicio" data-options="validType:'length[1,200]',required:true,validateOnCreate:false,validateOnBlur:true, editable:false, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_inicio_activo"]); }'" class="easyui-datebox @{@contenedor}formulario" value="" style="width:600px;height:25px">*@
                         </td>
                     </tr>
 
@@ -162,7 +163,8 @@
                             Fecha Fin <span style='color:red'>*</span>
                         </td>
                         <td>
-                            <input id="@{@contenedor}fchcfin" data-options="validType:'length[1,200]',required:true,validateOnCreate:false,validateOnBlur:true, editable:false, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_fin_activo"]); }'" class="easyui-datebox @{@contenedor}formulario" value="" style="width:600px;height:25px">
+                            <input id="@{@contenedor}fchcfin" data-options="required:true,validateOnCreate:false,validateOnBlur:true, editable:true, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_fin_activo"]); }'" class="easyui-datetimebox @{@contenedor}formulario" style="width:200px;">
+                            @*<input id="@{@contenedor}fchcfin" data-options="validType:'length[1,200]',required:true,validateOnCreate:false,validateOnBlur:true, editable:false, value: '@if (accionsql == "EC") { @Html.Raw(Model.Tables[0].Rows[0]["dconvocatoria_fin_activo"]); }'" class="easyui-datebox @{@contenedor}formulario" value="" style="width:600px;height:25px">*@
                         </td>
                     </tr>
 

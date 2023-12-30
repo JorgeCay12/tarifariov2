@@ -331,6 +331,8 @@ namespace WebApplication1.Controllers
             //chash = "997867ED74A68577218A31B474A288E4C54B0253EE1C421AF1B0BB8F0C875AD6162DC1C3B1B38389F67D27DFB48FD02F47E076C25DEBF07A74F6EA069363D358";
 
             string mensaje_error = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>El enlace no existe</div></div></body>";
+            string mensaje_cerrar = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>Gracias por su preferencia, el curso ya cerró su convocatoria</div></div></body>";
+            string mensaje_fecha_vencida = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-danger text-center' role='alert'>Gracias por su preferencia, el curso ya alcanzó su fecha limite de convocatoria</div></div></body>";
             //string mensaje_mantenimiento = "<!DOCTYPE html><meta name='viewport' content='width = device-width, initial-scale = 1, maximum-scale = 1'><script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js'></script><link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css' rel='stylesheet'/><body><div id='content'><div class='alert alert-primary text-center' role='alert'>La pagina se encuentra en mantenimiento, regresamos a las 14:00 horas, disculpen los inconvenientes</div></div></body>";
 
             string crespuesta = "";
@@ -338,7 +340,7 @@ namespace WebApplication1.Controllers
             ViewBag.ccod_grupo = "";
             //string ccod_curso = "";
             WebApplication1.Models.Generico obj2 = new WebApplication1.Models.Generico();
-            object[,] arreglo = new object[2, 2] { { "@accion", "MOS" }, { "@chash", id3 } };
+            object[,] arreglo = new object[3, 2] { { "@accion", "MOS" }, { "@cvalor", id2 }, { "@chash", id3 } };
             DataTable dt = new DataTable();
             dt = obj2.GetDatatable("upch299", "usp_dgagenericos", arreglo);
 
@@ -358,6 +360,14 @@ namespace WebApplication1.Controllers
             else if (crespuesta == "ne") //no existe
             {
                 return Content(mensaje_error);
+            }
+            else if (crespuesta == "I") //curso inactivo
+            {
+                return Content(mensaje_cerrar);
+            }
+            else if (crespuesta == "fv") //fecha vencida
+            {
+                return Content(mensaje_fecha_vencida);
             }
             else if (crespuesta == "er") //error
             {
